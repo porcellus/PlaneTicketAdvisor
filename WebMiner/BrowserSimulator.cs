@@ -1,37 +1,39 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Globalization;
+using Awesomium.Core;
 
 namespace WebMiner
 {
     public class BrowserSimulator
     {
-        Awesomium.Core.WebView view_;
-        public BrowserSimulator(Awesomium.Core.WebView b)
+        readonly Awesomium.Core.WebView _view;
+        public BrowserSimulator( string url = "")
         {
-            this.view_ = b;
-            view_.DocumentReady += InitializeJavascript;
-            view_.AddressChanged += ViewAddressChanged;
+            _view = Awesomium.Core.WebCore.CreateWebView(1024, 768);
+            _view.DocumentReady += OnDocumentReady;
+            _view.DocumentReady += InitializeJavascript;
+            _view.AddressChanged += ViewAddressChanged;
+            _view.Source = new Uri(url);
         }
 
         public Uri Source
         {
-            get { return view_.Source; }
-            set { view_.Source = value; }
+            get { return _view.Source; }
+            set { _view.Source = value; }
         }
 
         public bool IsDocumentReady
         {
-            get { return view_.IsDocumentReady; }
+            get { return _view.IsDocumentReady; }
         }
 
         public Awesomium.Core.ISurface Surface
         {
-            get { return view_.Surface; }
+            get { return _view.Surface; }
         }
 
         public event Awesomium.Core.UrlEventHandler AddressChanged;
+        public event Awesomium.Core.WebViewEventHandler DocumentReady;
 
         private void ViewAddressChanged(object sender, Awesomium.Core.UrlEventArgs ev)
         {
@@ -39,22 +41,28 @@ namespace WebMiner
                 AddressChanged(this, ev);
         }
 
+        private void OnDocumentReady(object sender, UrlEventArgs urlEventArgs)
+        {
+            if (DocumentReady != null)
+                DocumentReady(this, urlEventArgs);
+        }
+
         public void MoveMouse(int x, int y)
         {
-            view_.InjectMouseMove(x, y);
+            _view.InjectMouseMove(x, y);
         }
 
         public void DoClick(bool isLeft=true)
         {
-            view_.InjectMouseDown(isLeft ? Awesomium.Core.MouseButton.Left : Awesomium.Core.MouseButton.Right);
-            view_.InjectMouseUp(isLeft ? Awesomium.Core.MouseButton.Left : Awesomium.Core.MouseButton.Right);
+            _view.InjectMouseDown(isLeft ? Awesomium.Core.MouseButton.Left : Awesomium.Core.MouseButton.Right);
+            _view.InjectMouseUp(isLeft ? Awesomium.Core.MouseButton.Left : Awesomium.Core.MouseButton.Right);
         }
 
         public void ClickElement(string id)
         {
-            Awesomium.Core.JSValue[] x = view_.ExecuteJavascriptWithResult("findPosById('"+id+"');");
-            this.MoveMouse((int)x[0], (int)x[1]);
-            this.DoClick();
+            Awesomium.Core.JSValue[] x = _view.ExecuteJavascriptWithResult("findPosById('"+id+"');");
+            MoveMouse((int)x[0], (int)x[1]);
+            DoClick();
         }
 
         public void Type(string input)
@@ -62,20 +70,20 @@ namespace WebMiner
             var ev = new Awesomium.Core.WebKeyboardEvent();
             foreach (char c in input)
             {
-                ev.Text = c.ToString();
-                ev.KeyIdentifier = c.ToString();
+                ev.Text = c.ToString(CultureInfo.InvariantCulture);
+                ev.KeyIdentifier = c.ToString(CultureInfo.InvariantCulture);
                 ev.Type = Awesomium.Core.WebKeyboardEventType.KeyDown;
-                view_.InjectKeyboardEvent(ev);
+                _view.InjectKeyboardEvent(ev);
                 ev.Type = Awesomium.Core.WebKeyboardEventType.Char;
-                view_.InjectKeyboardEvent(ev);
+                _view.InjectKeyboardEvent(ev);
                 ev.Type = Awesomium.Core.WebKeyboardEventType.KeyUp;
-                view_.InjectKeyboardEvent(ev);
+                _view.InjectKeyboardEvent(ev);
             }
         }
 
-        public virtual void InitializeJavascript(object sender, Awesomium.Core.WebViewEventArgs e)
+        protected virtual void InitializeJavascript(object sender, Awesomium.Core.WebViewEventArgs e)
         {
-            string functions = @"
+            const string functions = @"
                 function findPos(obj) {
                     var curleft = 0;
                     var curtop = 0;
@@ -122,65 +130,15 @@ namespace WebMiner
                     }
                     return ret;
                 }
-
-                function getResultObject(x){
-                    var obj = {
-                        perprice: x.getElementsByClassName('per-price')[0].getElementsByClassName('integer')[0].innerHTML.trim().replace(' ',''),
-                        fullprice: x.getElementsByClassName('price')[0].getElementsByClassName('integer')[0].innerHTML.trim().replace(' ',''),
-        
-                        outCompany: x.getElementsByClassName('company')[1].getElementsByClassName('content')[0].innerHTML.trim(),
-        
-                        outStartTime: x.getElementsByClassName('from-time')[1].getElementsByClassName('content')[0].innerHTML.trim(),
-                        outStartStation: x.getElementsByClassName('from-station')[1].getElementsByClassName('content')[0].innerHTML.trim(),
-        
-                        outArriveTime: x.getElementsByClassName('to-time')[1].getElementsByClassName('content')[0].innerHTML.trim(),
-                        outArriveStation: x.getElementsByClassName('to-station')[1].getElementsByClassName('content')[0].innerHTML.trim(),
-                    };
-    
-                    if(x.getElementsByClassName('company').length >= 2 && x.getElementsByClassName('company')[1].getElementsByClassName('content').length >= 2){
-                        obj.backCompany = x.getElementsByClassName('company')[1].getElementsByClassName('content')[1].innerHTML.trim();
-                        obj.backStartStation = x.getElementsByClassName('from-station')[1].getElementsByClassName('content')[1].innerHTML.trim();
-                        obj.backStartTime = x.getElementsByClassName('from-time')[1].getElementsByClassName('content')[1].innerHTML.trim();
-                        obj.backArriveStation = x.getElementsByClassName('to-station')[1].getElementsByClassName('content')[1].innerHTML.trim();
-                        obj.backArriveTime = x.getElementsByClassName('to-time')[1].getElementsByClassName('content')[1].innerHTML.trim();
-                    }
-    
-                    return obj;
-                }
-
-                function getResults(){
-                    var retVal = [];
-                    var elements=document.getElementsByClassName('resultitem');
-                    for(var i=0;i<elements.length;i++){
-                        retVal[i]=getResultObject(elements[i]);
-                    }
-                    return retVal;
-                }
 ";
-            view_.ExecuteJavascript(functions);
+            _view.ExecuteJavascript(functions);
 
-            if (view_.GetLastError() != Awesomium.Core.Error.None) throw new Exception(view_.GetLastError().ToString());
-        }
-
-        public List<Awesomium.Core.JSValue> stringToObjArray(string str){
-            List<Awesomium.Core.JSValue> arr = new List<Awesomium.Core.JSValue>();
-            return arr;
+            if (_view.GetLastError() != Awesomium.Core.Error.None) throw new Exception(_view.GetLastError().ToString());
         }
 
         public Awesomium.Core.JSValue ExecuteJavascriptWithResult(string script)
         {
-            return view_.ExecuteJavascriptWithResult(script);
-        }
-
-        public virtual List<Ticket> GetResults()
-        {
-            List<Ticket> retVal = new List<Ticket>();
-            Awesomium.Core.JSValue[] res= view_.ExecuteJavascriptWithResult("objArrayToString(getResults());");
-
-            foreach (string r in res)
-                retVal.Add(WebMiner.TicketFromString(r));
-
-            return retVal;
+            return _view.ExecuteJavascriptWithResult(script);            
         }
     }
 }

@@ -98,6 +98,10 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\BusinessLogic\BusinessLogic.csproj">
+      <Project>{bc23b44e-c924-4b38-ad3c-a2133d4c2e33}</Project>
+      <Name>BusinessLogic</Name>
+    </ProjectReference>
     <ProjectReference Include="..\WebMiner\WebMiner.csproj">
       <Project>{6CB6456A-05CF-4B52-801A-EDC82EED6BC4}</Project>
       <Name>WebMiner</Name>
