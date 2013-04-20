@@ -6,10 +6,10 @@ namespace WebMiner
 {
     public class BrowserSimulator
     {
-        readonly Awesomium.Core.WebView _view;
+        readonly WebView _view;
         public BrowserSimulator( string url = "")
         {
-            _view = Awesomium.Core.WebCore.CreateWebView(1024, 768);
+            _view = WebCore.CreateWebView(1024, 768);
             _view.DocumentReady += OnDocumentReady;
             _view.DocumentReady += InitializeJavascript;
             _view.AddressChanged += ViewAddressChanged;
@@ -27,13 +27,13 @@ namespace WebMiner
             get { return _view.IsDocumentReady; }
         }
 
-        public Awesomium.Core.ISurface Surface
+        public ISurface Surface
         {
             get { return _view.Surface; }
         }
 
-        public event Awesomium.Core.UrlEventHandler AddressChanged;
-        public event Awesomium.Core.WebViewEventHandler DocumentReady;
+        public event UrlEventHandler AddressChanged;
+        public event WebViewEventHandler DocumentReady;
 
         private void ViewAddressChanged(object sender, Awesomium.Core.UrlEventArgs ev)
         {
@@ -54,34 +54,34 @@ namespace WebMiner
 
         public void DoClick(bool isLeft=true)
         {
-            _view.InjectMouseDown(isLeft ? Awesomium.Core.MouseButton.Left : Awesomium.Core.MouseButton.Right);
-            _view.InjectMouseUp(isLeft ? Awesomium.Core.MouseButton.Left : Awesomium.Core.MouseButton.Right);
+            _view.InjectMouseDown(isLeft ? MouseButton.Left : MouseButton.Right);
+            _view.InjectMouseUp(isLeft ? MouseButton.Left : MouseButton.Right);
         }
 
         public void ClickElement(string id)
         {
-            Awesomium.Core.JSValue[] x = _view.ExecuteJavascriptWithResult("findPosById('"+id+"');");
+            JSValue[] x = _view.ExecuteJavascriptWithResult("findPosById('"+id+"');");
             MoveMouse((int)x[0], (int)x[1]);
             DoClick();
         }
 
         public void Type(string input)
         {
-            var ev = new Awesomium.Core.WebKeyboardEvent();
+            var ev = new WebKeyboardEvent();
             foreach (char c in input)
             {
                 ev.Text = c.ToString(CultureInfo.InvariantCulture);
                 ev.KeyIdentifier = c.ToString(CultureInfo.InvariantCulture);
-                ev.Type = Awesomium.Core.WebKeyboardEventType.KeyDown;
+                ev.Type = WebKeyboardEventType.KeyDown;
                 _view.InjectKeyboardEvent(ev);
-                ev.Type = Awesomium.Core.WebKeyboardEventType.Char;
+                ev.Type = WebKeyboardEventType.Char;
                 _view.InjectKeyboardEvent(ev);
-                ev.Type = Awesomium.Core.WebKeyboardEventType.KeyUp;
+                ev.Type = WebKeyboardEventType.KeyUp;
                 _view.InjectKeyboardEvent(ev);
             }
         }
 
-        protected virtual void InitializeJavascript(object sender, Awesomium.Core.WebViewEventArgs e)
+        protected virtual void InitializeJavascript(object sender, WebViewEventArgs e)
         {
             const string functions = @"
                 function findPos(obj) {
@@ -133,10 +133,10 @@ namespace WebMiner
 ";
             _view.ExecuteJavascript(functions);
 
-            if (_view.GetLastError() != Awesomium.Core.Error.None) throw new Exception(_view.GetLastError().ToString());
+            if (_view.GetLastError() != Error.None) throw new Exception(_view.GetLastError().ToString());
         }
 
-        public Awesomium.Core.JSValue ExecuteJavascriptWithResult(string script)
+        public JSValue ExecuteJavascriptWithResult(string script)
         {
             return _view.ExecuteJavascriptWithResult(script);            
         }

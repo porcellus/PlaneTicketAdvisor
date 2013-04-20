@@ -51,7 +51,6 @@
   <ItemGroup>
     <Compile Include="BrowserSimulator.cs" />
     <Compile Include="Liligo.cs" />
-    <Compile Include="WebMiner.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

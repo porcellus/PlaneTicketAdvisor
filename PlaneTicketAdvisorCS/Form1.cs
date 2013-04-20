@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 using BusinessLogic;
+using PlaneTicketAdvisorCS.Properties;
 
 namespace PlaneTicketAdvisorCS
 {
@@ -11,11 +12,11 @@ namespace PlaneTicketAdvisorCS
             InitializeComponent();
         }
 
-        private BusinessLogic.TravelManager _travelManager;
+        private TravelManager _travelManager;
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            _travelManager = new TravelManager(new ITravelSearchEngine[]{new WebMiner.Liligo()});
+            _travelManager = new TravelManager(new Func<ITravelSearchEngine>[] {() => new WebMiner.Liligo()});
         }
 
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
@@ -43,7 +44,7 @@ namespace PlaneTicketAdvisorCS
 
         private void btnSearch_Click(object sender, EventArgs e)
         {
-            statusLabel.Text = "Keresés...";
+            statusLabel.Text = Resources.Form1_btnSearch_Click_Searching;
             progressBar.Step = 1;
             
             _travelManager.StartSearch();
@@ -55,10 +56,12 @@ namespace PlaneTicketAdvisorCS
 
         private void resultCheck_Tick(object sender, EventArgs e)
         {
-            dataGridView1.DataSource = _travelManager.GetResults();
+            var results = _travelManager.GetResults();
+            if (dataGridView1.DataSource == null || ((object[])dataGridView1.DataSource).Length != results.Length)
+                dataGridView1.DataSource = results;
 
             progressBar.Step = _travelManager.GetProgress();
-            if (progressBar.Step == 100) statusLabel.Text = "Kész";
+            if (progressBar.Step == 100) statusLabel.Text = Resources.Form1_resultCheck_Tick_Done;
         }
 
         private void cbIsRet_CheckedChanged(object sender, EventArgs e)
