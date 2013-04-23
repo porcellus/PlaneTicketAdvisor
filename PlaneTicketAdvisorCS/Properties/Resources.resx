@@ -125,4 +125,25 @@
     <value>Keresés...</value>
     <comment>StatusLabel</comment>
   </data>
+  <data name="Form1_Form1_Load_Infants" xml:space="preserve">
+    <value>Csecsemők</value>
+  </data>
+  <data name="Form1_Form1_Load_Children" xml:space="preserve">
+    <value>Gyerekek</value>
+  </data>
+  <data name="Form1_Form1_Load_Adults" xml:space="preserve">
+    <value>Felnőttek</value>
+  </data>
+  <data name="Form1_Form1_Load_Date" xml:space="preserve">
+    <value>Dátum</value>
+  </data>
+  <data name="Form1_Form1_Load_To" xml:space="preserve">
+    <value>Hova</value>
+  </data>
+  <data name="Form1_Form1_Load_From" xml:space="preserve">
+    <value>Honnan</value>
+  </data>
+  <data name="Form1_Form1_Load_Price" xml:space="preserve">
+    <value>Ár</value>
+  </data>
 </root>

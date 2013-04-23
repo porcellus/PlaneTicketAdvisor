@@ -73,8 +73,37 @@ namespace BusinessLogic
             }
         }
     }
-    public class Travel
+    public class Travel : IEquatable<Travel>
     {
+        public bool Equals(Travel other)
+        {
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            return string.Equals(From, other.From) && string.Equals(To, other.To) && Date.Equals(other.Date) && Adults == other.Adults && Children == other.Children && Infants == other.Infants;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((Travel) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = (From != null ? From.GetHashCode() : 0);
+                hashCode = (hashCode*397) ^ (To != null ? To.GetHashCode() : 0);
+                hashCode = (hashCode*397) ^ Date.GetHashCode();
+                hashCode = (hashCode*397) ^ Adults;
+                hashCode = (hashCode*397) ^ Children;
+                hashCode = (hashCode*397) ^ Infants;
+                return hashCode;
+            }
+        }
+
         [DisplayName("Honnan")]
         public string From { get; set; }
         [DisplayName("Hova")]
@@ -88,7 +117,7 @@ namespace BusinessLogic
         [DisplayName("Csecsmők")]
         public int Infants { get; set; }
 
-        public Travel(string to, string @from, DateTime date, int adults = 1, int children = 0, int infants = 0)
+        public Travel(string @from, string to, DateTime date, int adults = 1, int children = 0, int infants = 0)
         {
             To = to;
             From = @from;
@@ -98,16 +127,39 @@ namespace BusinessLogic
             Infants = infants;
         }
     }
-    public class Search: Travel
+    public class Search : Travel, IEquatable<Search>
+    {
+        public bool Equals(Search other)
         {
-            public DateTime? RetDate;
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            return base.Equals(other) && RetDate.Equals(other.RetDate);
+        }
 
-            public Search(string to, string @from, DateTime date, DateTime? retDate = null, int adults = 1, int children = 0, int infants = 0)
-                : base(to, @from, date, adults, children, infants)
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((Search) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
             {
-                RetDate = retDate;
+                return (base.GetHashCode()*397) ^ RetDate.GetHashCode();
             }
         }
+
+        public DateTime? RetDate;
+
+        public Search(string @from, string to, DateTime date, DateTime? retDate = null, int adults = 1, int children = 0, int infants = 0)
+            : base(to, @from, date, adults, children, infants)
+        {
+            RetDate = retDate;
+        }
+    }
 
     public interface ITravelSearchEngine
     {
@@ -116,58 +168,5 @@ namespace BusinessLogic
 
         double GetProgressPercent();
         IEnumerable<Ticket> GetResults();
-    }
-
-    public class TravelManager
-    {
-        public List<Travel> Travels { get; set; }
-
-        private readonly Func<ITravelSearchEngine>[] _engineFactories;
-
-        private Dictionary<Search, ITravelSearchEngine> Searches;
-
-        public TravelManager(Func<ITravelSearchEngine>[] engineFactories)
-        {
-            _engineFactories = engineFactories;
-
-            Travels = new List<Travel>();
-            Searches = new Dictionary<Search, ITravelSearchEngine>();
-        }
-
-        public void AddTravel(string to, string @from, DateTime date, int adults = 1, int children = 0, int infants = 0)
-        {
-            Travels.Add(new Travel(to,from,date,adults,children,infants));
-        }
-
-        public void StartSearch()
-        {
-            if (Travels.Count == 0) return;
-            foreach (var engineFactory in _engineFactories) //TODO: Csoportositas...
-            {
-                var searchEngine = engineFactory();
-                searchEngine.Initialize();
-                var search = new Search(Travels[0].From,Travels[0].To,Travels[0].Date,null,Travels[0].Adults, Travels[0].Children, Travels[0].Infants);
-                search.RetDate = Travels[1].To == search.From && Travels[1].From == search.To
-                                        ? (DateTime?) Travels[1].Date
-                                        : null;
-                searchEngine.StartSearch(search);
-                Searches[search] = searchEngine;
-            }
-        }
-        
-        public Ticket[] GetResults()
-        {
-            var retVal = new List<Ticket>();
-
-            foreach (var search in Searches)
-                retVal.AddRange(search.Value.GetResults());
-
-            return retVal.Distinct().ToArray();
-        }
-
-        public int GetProgress()
-        {
-            return (int) Math.Floor(Searches.Average(search => search.Value.GetProgressPercent()));
-        }
     }
 }

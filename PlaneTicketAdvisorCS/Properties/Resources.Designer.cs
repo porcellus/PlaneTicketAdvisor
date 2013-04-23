@@ -70,6 +70,69 @@ namespace PlaneTicketAdvisorCS.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Felnőttek.
+        /// </summary>
+        internal static string Form1_Form1_Load_Adults {
+            get {
+                return ResourceManager.GetString("Form1_Form1_Load_Adults", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Gyerekek.
+        /// </summary>
+        internal static string Form1_Form1_Load_Children {
+            get {
+                return ResourceManager.GetString("Form1_Form1_Load_Children", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Dátum.
+        /// </summary>
+        internal static string Form1_Form1_Load_Date {
+            get {
+                return ResourceManager.GetString("Form1_Form1_Load_Date", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Honnan.
+        /// </summary>
+        internal static string Form1_Form1_Load_From {
+            get {
+                return ResourceManager.GetString("Form1_Form1_Load_From", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Csecsemők.
+        /// </summary>
+        internal static string Form1_Form1_Load_Infants {
+            get {
+                return ResourceManager.GetString("Form1_Form1_Load_Infants", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ár.
+        /// </summary>
+        internal static string Form1_Form1_Load_Price {
+            get {
+                return ResourceManager.GetString("Form1_Form1_Load_Price", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hova.
+        /// </summary>
+        internal static string Form1_Form1_Load_To {
+            get {
+                return ResourceManager.GetString("Form1_Form1_Load_To", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Kész.
         /// </summary>
         internal static string Form1_resultCheck_Tick_Done {

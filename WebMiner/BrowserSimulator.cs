@@ -60,9 +60,28 @@ namespace WebMiner
 
         public void ClickElement(string id)
         {
-            JSValue[] x = _view.ExecuteJavascriptWithResult("findPosById('"+id+"');");
-            MoveMouse((int)x[0], (int)x[1]);
+            JSValue x = _view.ExecuteJavascriptWithResult("findPosById('"+id+"');");
+            if(x.IsUndefined || !x.IsArray) throw new ArgumentException("Element not found.");
+            var pos = (JSValue[]) x;
+            MoveMouse((int)pos[0], (int)pos[1]);
             DoClick();
+        }
+
+        public void ClickElementPersistent(string id)
+        {
+            while (true)
+            {
+                try
+                {
+                    ClickElement(id);
+                    return;
+                }
+                catch (ArgumentException ex)
+                {
+                    System.Threading.Thread.Sleep(100);
+                }
+
+            }
         }
 
         public void Type(string input)
