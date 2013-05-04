@@ -16,33 +16,35 @@ namespace WebMiner
         {
             CommandQueue= new ConcurrentQueue<Tuple<Guid, Func<JSValue>>>();
             Results = new ConcurrentDictionary<Guid, JSValue>();
-            var thread = new Thread(delegate
-                {
-                    WebCore.Initialize(WebConfig.Default, true);
-                    while (Thread.CurrentThread.ThreadState != ThreadState.AbortRequested)
-                    {
-                        Tuple<Guid, Func<JSValue>> cCommand;
-                        if (CommandQueue.TryDequeue(out cCommand))
-                        {
-                            try
-                            {
-                                Results.TryAdd(cCommand.Item1, cCommand.Item2());
-                            }
-                            catch (Exception ex)
-                            {
-                                Debug.WriteLine("Exception in browserthread: " + ex.Message);
-                            }
-                        }
-                        else
-                        {
-                            WebCore.Update();
-                            Thread.Sleep(10);
-                        }
-                    }
-                });
+            var thread = new Thread(BgBrowserLoop);
             thread.Name = "BgBrowserThread";
             thread.IsBackground = true;
             thread.Start();
+        }
+
+        private static void BgBrowserLoop()
+        {
+            WebCore.Initialize(WebConfig.Default, true);
+            while (Thread.CurrentThread.ThreadState != ThreadState.AbortRequested)
+            {
+                Tuple<Guid, Func<JSValue>> cCommand;
+                if (CommandQueue.TryDequeue(out cCommand))
+                {
+                    try
+                    {
+                        Results.TryAdd(cCommand.Item1, cCommand.Item2());
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine("Exception in browserthread: " + ex.Message);
+                    }
+                }
+                else
+                {
+                    WebCore.Update();
+                    Thread.Sleep(10);
+                }
+            }
         }
 
         public static JSValue ExecuteFunction(Func<JSValue> pDelegate)
