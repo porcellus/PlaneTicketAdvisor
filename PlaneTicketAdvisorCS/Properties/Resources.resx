@@ -146,4 +146,10 @@
   <data name="Form1_Form1_Load_Price" xml:space="preserve">
     <value>Ár</value>
   </data>
+  <data name="Form1_Form1_Load_OutDate" xml:space="preserve">
+    <value>Kiutazás</value>
+  </data>
+  <data name="Form1_Form1_Load_BackDate" xml:space="preserve">
+    <value>Hazaút</value>
+  </data>
 </root>

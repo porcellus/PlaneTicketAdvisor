@@ -47,9 +47,11 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BrowserSimulator.cs" />
+    <Compile Include="BrowserThread.cs" />
     <Compile Include="Liligo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

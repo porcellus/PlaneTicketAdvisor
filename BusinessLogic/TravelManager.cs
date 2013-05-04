@@ -6,23 +6,59 @@ namespace BusinessLogic
 {
     public class TravelManager
     {
+        private static List<List<Ticket>> Combine(List<List<Ticket>> lists, IEnumerable<Ticket> nList)
+        {
+            var retVal = new List<List<Ticket>>();
+
+            foreach (var ticket in nList)
+            {
+                foreach (var list in lists)
+                {
+                    var addList = list.ToList();
+                    addList.Add(ticket);
+                    retVal.Add(addList);
+                }
+            }
+
+            return retVal;
+        }
+
+#region Fields
         public List<Travel> FlightList { get; private set; }
 
-        private readonly Func<ITravelSearchEngine>[] _engineFactories;
+        private readonly Dictionary<Tuple<Search,DateTime>, List<Ticket>> _cache = new Dictionary<Tuple<Search, DateTime>, List<Ticket>>();
 
-        private readonly Dictionary<Search, List<ITravelSearchEngine>> _searches;
+        private readonly ITravelSearchEngine[] _searchEngines;
 
-        public TravelManager(Func<ITravelSearchEngine>[] engineFactories)
+        public bool IsSearchInProgress { get; private set;}
+
+        private List<List<Search>> _searchPlans;
+#endregion
+
+        public TravelManager(ITravelSearchEngine[] searchEngines)
         {
-            _engineFactories = engineFactories;
+            _searchEngines = searchEngines;
+            foreach (var engine in searchEngines)
+            {
+                engine.Initialize();
+            }
 
             FlightList = new List<Travel>();
-            _searches = new Dictionary<Search, List< ITravelSearchEngine>>();
         }
 
         public void AddTravel(string @from,string to, DateTime date, int adults = 1, int children = 0, int infants = 0)
         {
-            FlightList.Add(new Travel(from, to, date, adults, children, infants));
+            if(!IsSearchInProgress) FlightList.Add(new Travel(from, to, date, adults, children, infants));
+        }
+
+        public void CancelSearch()
+        {
+            IsSearchInProgress = false;
+
+            foreach (var engine in _searchEngines)
+            {
+                engine.CancelSearches();
+            }
         }
 
         public List<List<Search>> GetSearchPlans(bool[] checks = null)
@@ -67,77 +103,71 @@ namespace BusinessLogic
             return retVal;
         }
 
-        public void StartSearch()
+        public void StartSearch(bool forceRefresh = false)
         {
             if (FlightList.Count == 0) return;
-            var itiner = new List<Search>();
-            for (var i = 0; i < FlightList.Count; ++i)
-            {
-                var search = new Search(FlightList[i].From, FlightList[i].To, FlightList[i].Date, null,
-                                        FlightList[i].Adults, FlightList[i].Children, FlightList[i].Infants);
-                if (i+1<FlightList.Count&&FlightList[i + 1].To == search.From && FlightList[i + 1].From == search.To &&
-                    FlightList[i + 1].Adults == search.Adults && FlightList[i + 1].Children == search.Children && FlightList[i + 1].Infants == search.Infants)
-                {
-                    search.RetDate = FlightList[i+1].Date;
-                    ++i;
-                }
-                itiner.Add(search);
-            }
 
-            foreach (var engineFactory in _engineFactories) //TODO: Csoportositas...
+            _searchPlans = GetSearchPlans();
+
+            var reqSearches = _searchPlans.Aggregate((flat, a)=>flat.Union(a).ToList());
+
+            foreach (var engine in _searchEngines)
             {
-                foreach (var search in itiner)
+                foreach (var search in reqSearches)
                 {
-                    var searchEngine = engineFactory();
-                    searchEngine.Initialize();
-                    searchEngine.StartSearch(search);
-                    if(!_searches.ContainsKey(search)) _searches[search] = new List<ITravelSearchEngine>();
-                    _searches[search].Add(searchEngine);
+                    if (forceRefresh ||
+                        !_cache.Any(a => Equals(a.Key.Item1, search) && a.Key.Item2 >= DateTime.Now.AddMinutes(10)))
+                        engine.AddSearch(search);
                 }
+                engine.StartSearches();
             }
         }
 
-        public List<List<Ticket>> Combine(List< List<Ticket>> lists, List<Ticket> nList)
-        {
-            var retVal = new List<List<Ticket>>();
-
-            foreach (var ticket in nList)
-            {
-                foreach (var list in lists)
-                {
-                    var addList = list.ToList();
-                    addList.Add(ticket);
-                    retVal.Add(addList);
-                }
-            }
-
-            return retVal;
-        }
 
         public List<List<Ticket>> GetResults()
         {
             var resultSets = new Dictionary< Travel ,List<Ticket>>();
-            foreach (var search in _searches)
-            {
-                resultSets.Add(search.Key,new List<Ticket>());
-                foreach (var searchEngine in search.Value)
-                    resultSets[search.Key].AddRange(searchEngine.GetResults());
-            }
-            var resultSetIt = resultSets.GetEnumerator();
-            var retVal = resultSetIt.Current.Value.Select(a => new List<Ticket> { a }).ToList();
 
-            while (resultSetIt.MoveNext())
+            var tmp = new Dictionary<ITravelSearchEngine, IDictionary<Search, List<Ticket>>>();
+            foreach (var engine in _searchEngines)
+                tmp[engine] = engine.GetResults();
+
+            foreach (var search in _searchPlans.Aggregate((w,a)=> w.Union(a).ToList()))
             {
-                retVal = Combine(retVal, resultSetIt.Current.Value);
+                resultSets.Add(search, new List<Ticket>());
+                foreach (var engine in _searchEngines)
+                {
+                    if (tmp[engine].ContainsKey(search))
+                    {
+                        resultSets[search].AddRange(tmp[engine][search].OrderBy(a => a.Price).Take(2));
+                    }
+                }
+
+                if (resultSets[search].Count != 0)
+                    _cache.Add(new Tuple<Search, DateTime>(search, DateTime.UtcNow), resultSets[search]);
+                else
+                {
+                    if (_cache.Any(a=> Equals(a.Key.Item1, search) && a.Key.Item2 >= DateTime.Now.AddHours(-1)))
+                        resultSets[search] = _cache.Last(a=>Equals(a.Key.Item1,search)).Value;
+                }
+            }
+            var retVal = new List<List<Ticket>>();
+
+            foreach (var plan in _searchPlans)
+            {
+                var result = plan.Aggregate(new List<List<Ticket>> {new List<Ticket>()}, (current, search) => Combine(current, resultSets[search]));
+
+                retVal.AddRange(result);
             }
 
-            return retVal;
+            retVal = retVal.OrderBy(a => a.Sum(c => c.Price)).ToList();
+
+            return retVal.Take(100).ToList();
         }
 
         public int GetProgress()
         {
-            if (_searches.Count == 0) return 0;
-            return (int) Math.Floor(_searches.Average(search => search.Value.Average(eng => eng.GetProgressPercent())));
+            return (int) Math.Floor(_searchEngines.Average(c => c.GetProgressPercent()));
         }
     }
 }

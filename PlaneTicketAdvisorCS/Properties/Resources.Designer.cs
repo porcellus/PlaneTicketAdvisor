@@ -79,6 +79,15 @@ namespace PlaneTicketAdvisorCS.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Hazaút.
+        /// </summary>
+        internal static string Form1_Form1_Load_BackDate {
+            get {
+                return ResourceManager.GetString("Form1_Form1_Load_BackDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Gyerekek.
         /// </summary>
         internal static string Form1_Form1_Load_Children {
@@ -111,6 +120,15 @@ namespace PlaneTicketAdvisorCS.Properties {
         internal static string Form1_Form1_Load_Infants {
             get {
                 return ResourceManager.GetString("Form1_Form1_Load_Infants", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Kiutazás.
+        /// </summary>
+        internal static string Form1_Form1_Load_OutDate {
+            get {
+                return ResourceManager.GetString("Form1_Form1_Load_OutDate", resourceCulture);
             }
         }
         

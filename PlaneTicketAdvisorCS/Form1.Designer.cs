@@ -35,6 +35,7 @@
             this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.runtestToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.webControl1 = new Awesomium.Windows.Forms.WebControl(this.components);
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.progressBar = new System.Windows.Forms.ToolStripProgressBar();
@@ -64,7 +65,6 @@
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
-            this.runtestToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer)).BeginInit();
@@ -130,6 +130,13 @@
             this.aboutToolStripMenuItem.Text = "Rólam";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
+            // runtestToolStripMenuItem
+            // 
+            this.runtestToolStripMenuItem.Name = "runtestToolStripMenuItem";
+            this.runtestToolStripMenuItem.Size = new System.Drawing.Size(56, 20);
+            this.runtestToolStripMenuItem.Text = "runtest";
+            this.runtestToolStripMenuItem.Click += new System.EventHandler(this.runtestToolStripMenuItem_Click);
+            // 
             // webControl1
             // 
             this.webControl1.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -152,7 +159,6 @@
             // 
             // progressBar
             // 
-            this.progressBar.Maximum = 60;
             this.progressBar.Name = "progressBar";
             this.progressBar.Size = new System.Drawing.Size(100, 16);
             // 
@@ -413,13 +419,6 @@
             this.label1.Size = new System.Drawing.Size(45, 13);
             this.label1.TabIndex = 0;
             this.label1.Text = "Honnan";
-            // 
-            // runtestToolStripMenuItem
-            // 
-            this.runtestToolStripMenuItem.Name = "runtestToolStripMenuItem";
-            this.runtestToolStripMenuItem.Size = new System.Drawing.Size(56, 20);
-            this.runtestToolStripMenuItem.Text = "runtest";
-            this.runtestToolStripMenuItem.Click += new System.EventHandler(this.runtestToolStripMenuItem_Click);
             // 
             // Form1
             // 

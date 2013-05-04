@@ -1,30 +1,53 @@
 ﻿using System;
 using System.Globalization;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Windows.Threading;
 using Awesomium.Core;
 
 namespace WebMiner
 {
-    public class BrowserSimulator
+    public class BrowserSimulator: IDisposable
     {
-        readonly WebView _view;
+        public static void Update()
+        {
+            BrowserThread.ExecuteAction(WebCore.Update);
+            //WebCore.Update();
+        }
+        
+        private WebView _view;
         public BrowserSimulator( string url = "")
         {
-            _view = WebCore.CreateWebView(1024, 768);
-            _view.DocumentReady += OnDocumentReady;
-            _view.DocumentReady += InitializeJavascript;
-            _view.AddressChanged += ViewAddressChanged;
-            _view.Source = new Uri(url);
+            BrowserThread.ExecuteAction( ()=>
+                {
+                    _view = WebCore.CreateWebView(1024, 768);
+                    _view.DocumentReady += OnDocumentReady;
+                    _view.DocumentReady += InitializeJavascript;
+                    _view.AddressChanged += ViewAddressChanged;
+                    _view.Source = new Uri(url);
+                });
         }
 
         public Uri Source
         {
             get { return _view.Source; }
-            set { _view.Source = value; }
+            set
+            {
+                BrowserThread.ExecuteAction(() =>
+                    { _view.Source = value; });
+            }
         }
 
         public bool IsDocumentReady
         {
-            get { return _view.IsDocumentReady; }
+            get
+            {
+                return (bool) BrowserThread.ExecuteFunction(() =>
+                    {
+                        WebCore.Update();
+                        return _view.IsDocumentReady;
+                    });
+            }
         }
 
         public ISurface Surface
@@ -35,9 +58,9 @@ namespace WebMiner
         public event UrlEventHandler AddressChanged;
         public event WebViewEventHandler DocumentReady;
 
-        private void ViewAddressChanged(object sender, Awesomium.Core.UrlEventArgs ev)
+        private void ViewAddressChanged(object sender, UrlEventArgs ev)
         {
-            if (AddressChanged != null)
+            if(AddressChanged != null)
                 AddressChanged(this, ev);
         }
 
@@ -49,18 +72,26 @@ namespace WebMiner
 
         public void MoveMouse(int x, int y)
         {
-            _view.InjectMouseMove(x, y);
+            BrowserThread.ExecuteAction(() => 
+                _view.InjectMouseMove(x, y)
+            );
         }
 
         public void DoClick(bool isLeft=true)
         {
-            _view.InjectMouseDown(isLeft ? MouseButton.Left : MouseButton.Right);
-            _view.InjectMouseUp(isLeft ? MouseButton.Left : MouseButton.Right);
+            BrowserThread.ExecuteAction(() =>
+                {
+                    _view.InjectMouseDown(isLeft ? MouseButton.Left : MouseButton.Right);
+                    _view.InjectMouseUp(isLeft ? MouseButton.Left : MouseButton.Right);
+                });
         }
 
         public void ClickElement(string id)
         {
-            JSValue x = _view.ExecuteJavascriptWithResult("findPosById('"+id+"');");
+            JSValue x =
+                BrowserThread.ExecuteFunction(()=>
+                _view.ExecuteJavascriptWithResult("findPosById('" + id + "');")
+            );
             if(x.IsUndefined || !x.IsArray) throw new ArgumentException("Element not found.");
             var pos = (JSValue[]) x;
             MoveMouse((int)pos[0], (int)pos[1]);
@@ -76,9 +107,9 @@ namespace WebMiner
                     ClickElement(id);
                     return;
                 }
-                catch (ArgumentException ex)
+                catch (ArgumentException)
                 {
-                    System.Threading.Thread.Sleep(100);
+                    Thread.Sleep(100);
                 }
 
             }
@@ -91,12 +122,16 @@ namespace WebMiner
             {
                 ev.Text = c.ToString(CultureInfo.InvariantCulture);
                 ev.KeyIdentifier = c.ToString(CultureInfo.InvariantCulture);
-                ev.Type = WebKeyboardEventType.KeyDown;
-                _view.InjectKeyboardEvent(ev);
-                ev.Type = WebKeyboardEventType.Char;
-                _view.InjectKeyboardEvent(ev);
-                ev.Type = WebKeyboardEventType.KeyUp;
-                _view.InjectKeyboardEvent(ev);
+                BrowserThread.ExecuteAction(() =>
+                    {
+
+                        ev.Type = WebKeyboardEventType.KeyDown;
+                        _view.InjectKeyboardEvent(ev);
+                        ev.Type = WebKeyboardEventType.Char;
+                        _view.InjectKeyboardEvent(ev);
+                        ev.Type = WebKeyboardEventType.KeyUp;
+                        _view.InjectKeyboardEvent(ev);
+                    });
             }
         }
 
@@ -150,14 +185,25 @@ namespace WebMiner
                     return ret;
                 }
 ";
-            _view.ExecuteJavascript(functions);
 
-            if (_view.GetLastError() != Error.None) throw new Exception(_view.GetLastError().ToString());
+            BrowserThread.ExecuteAction(() =>
+            _view.ExecuteJavascript(functions)
+            );
+
+            //if (_view.GetLastError() != Error.None) throw new Exception(_view.GetLastError().ToString());
         }
 
         public JSValue ExecuteJavascriptWithResult(string script)
         {
-            return _view.ExecuteJavascriptWithResult(script);            
+            return
+                BrowserThread.ExecuteFunction(() => 
+                _view.ExecuteJavascriptWithResult(script)
+            ); 
+        }
+
+        public void Dispose()
+        {
+            _view.Dispose();
         }
     }
 }

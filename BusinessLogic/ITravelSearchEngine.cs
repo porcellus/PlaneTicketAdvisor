@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -75,6 +76,7 @@ namespace BusinessLogic
     }
     public class Travel : IEquatable<Travel>
     {
+        #region Equatable
         public bool Equals(Travel other)
         {
             if (ReferenceEquals(null, other)) return false;
@@ -103,18 +105,13 @@ namespace BusinessLogic
                 return hashCode;
             }
         }
+        #endregion
 
-        [DisplayName("Honnan")]
         public string From { get; set; }
-        [DisplayName("Hova")]
         public string To { get; set; }
-        [DisplayName("Mikor")]
         public DateTime Date { get; set; }
-        [DisplayName("Felnőttek")]
         public int Adults { get; set; }
-        [DisplayName("Gyerekek")]
         public int Children { get; set; }
-        [DisplayName("Csecsmők")]
         public int Infants { get; set; }
 
         public Travel(string @from, string to, DateTime date, int adults = 1, int children = 0, int infants = 0)
@@ -129,6 +126,7 @@ namespace BusinessLogic
     }
     public class Search : Travel, IEquatable<Search>
     {
+        #region Equatable
         public bool Equals(Search other)
         {
             if (ReferenceEquals(null, other)) return false;
@@ -151,6 +149,7 @@ namespace BusinessLogic
                 return (base.GetHashCode()*397) ^ RetDate.GetHashCode();
             }
         }
+        #endregion
 
         public DateTime? RetDate;
 
@@ -161,12 +160,15 @@ namespace BusinessLogic
         }
     }
 
-    public interface ITravelSearchEngine
+    public interface ITravelSearchEngine: IDisposable
     {
         void Initialize();
-        void StartSearch(Search inp);
+        void StartSearches();
+        void CancelSearches();
+        void AddSearch(Search nSearch);
+        void ClearSearches();
 
         double GetProgressPercent();
-        IEnumerable<Ticket> GetResults();
+        IDictionary<Search, List<Ticket>> GetResults();
     }
 }
