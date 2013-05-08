@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Windows.Forms;
@@ -19,18 +21,20 @@ namespace PlaneTicketAdvisorCS
             _liligo.Dispose();
         }
 
-        private TravelManager _travelManager;
+        private TravelSearchManager _travelSearchManager;
         private WebMiner.Liligo _liligo;
 
         private void Form1_Load(object sender, EventArgs e)
         {
             _liligo = new WebMiner.Liligo();
-            _travelManager = new TravelManager(new ITravelSearchEngine[] {_liligo});
+            _travelSearchManager = new TravelSearchManager(new ITravelSearchEngine[] {_liligo});
 
             dtDep.Value = DateTime.Today.AddDays(7);
             dtDep.MinDate = DateTime.Today;
             dtRet.Value = DateTime.Today.AddDays(9);
 
+            //grdTravels.AutoGenerateColumns = false;
+            //grdResults.AutoGenerateColumns = false;
             grdTravels.Columns.AddRange(new[]
                 {
                     new DataGridViewColumn{DataPropertyName = "From", HeaderText = Resources.Form1_Form1_Load_From, CellTemplate = new DataGridViewTextBoxCell()},
@@ -38,17 +42,17 @@ namespace PlaneTicketAdvisorCS
                     new DataGridViewColumn{DataPropertyName = "Date", HeaderText = Resources.Form1_Form1_Load_Date, CellTemplate = new DataGridViewTextBoxCell()},
                     new DataGridViewColumn{DataPropertyName = "Adults", HeaderText = Resources.Form1_Form1_Load_Adults, CellTemplate = new DataGridViewTextBoxCell()},
                     new DataGridViewColumn{DataPropertyName = "Children", HeaderText = Resources.Form1_Form1_Load_Children, CellTemplate = new DataGridViewTextBoxCell()},
-                    new DataGridViewColumn{DataPropertyName = "Infants", HeaderText = Resources.Form1_Form1_Load_Infants, CellTemplate = new DataGridViewTextBoxCell()},
+                    new DataGridViewColumn{DataPropertyName = "Infants", HeaderText = Resources.Form1_Form1_Load_Infants, CellTemplate = new DataGridViewTextBoxCell()}
                 });
 
-            listView1.Columns.AddRange(new[]
+            grdResults.Columns.Clear();
+            grdResults.Columns.AddRange(new[]
                 {
-                    new ColumnHeader {Text = Resources.Form1_Form1_Load_From, Width = -1},
-                    new ColumnHeader {Text = Resources.Form1_Form1_Load_To, Width = -1},
-                    new ColumnHeader {Text = Resources.Form1_Form1_Load_OutDate, Width = -1},
-                    new ColumnHeader {Text = Resources.Form1_Form1_Load_BackDate, Width = -1},
-                    new ColumnHeader {Text = Resources.Form1_Form1_Load_Price, Width = -1},
+                    new DataGridViewColumn{DataPropertyName = "TicketCount", HeaderText = Resources.Form1_Form1_Load_TicketCount}, 
+                    new DataGridViewColumn{DataPropertyName = "SumPrice", HeaderText = Resources.Form1_Form1_Load_Price}, 
+                    new DataGridViewColumn{DataPropertyName = "EngineName", HeaderText = Resources.Form1_Form1_Load_SearchEngineName}
                 });
+            grdResults.DataSource = ResultSets;
 
             AppDomain currentDomain = AppDomain.CurrentDomain;
             currentDomain.UnhandledException += MyHandler;
@@ -56,7 +60,7 @@ namespace PlaneTicketAdvisorCS
 
         static void MyHandler(object sender, UnhandledExceptionEventArgs args)
         {
-            Exception e = (Exception)args.ExceptionObject;
+            var e = (Exception)args.ExceptionObject;
             Debug.WriteLine("MyHandler caught : " + e.Message);
         }
 
@@ -88,33 +92,34 @@ namespace PlaneTicketAdvisorCS
             statusLabel.Text = Resources.Form1_btnSearch_Click_Searching;
             progressBar.Step = 1; 
             
-            _travelManager.StartSearch();
+            _travelSearchManager.StartSearch();
             
             var resultCheck = new Timer {Interval = 1000};
             resultCheck.Tick += resultCheck_Tick;
             resultCheck.Start();
         }
 
+        protected readonly List<ResultSet> ResultSets = new List<ResultSet>();
+        
         private void resultCheck_Tick(object sender, EventArgs e)
         {
-            progressBar.Value = _travelManager.GetProgress();
+            progressBar.Value = _travelSearchManager.GetProgress();
             if (progressBar.Value == 100) statusLabel.Text = Resources.Form1_resultCheck_Tick_Done;
-            var results = _travelManager.GetResults();
+            var results = _travelSearchManager.GetResults();
             //if (dataGridView1.DataSource == null || results.TrueForAll(a => ((object[])dataGridView1.DataSource).Length))
             //listView1.Clear();
-            if (listView1.Items.Count >= results.Sum(a => a.Count) + results.Count) return;
-            listView1.Items.Clear();
-            foreach (var resultset in results)
-            {
-                if (resultset.Count != 0)
-                {
-                    listView1.Items.AddRange(
-                        resultset.Select(ticket => new ListViewItem(new []{ticket.OutStartStation, ticket.OutArriveStation, ticket.Price.ToString()})).ToArray()
-                        );
-                    listView1.Items.Add(new ListViewItem(new string[] {"end", "sum", resultset.Sum(a=> a.Price).ToString()}));
-                }
-            }
-            listView1.Refresh();
+            if(grdResults.RowCount == results.Count) return;
+            ResultSets.Clear();
+            ResultSets.AddRange(
+                results.Select(
+                    a =>
+                    new ResultSet
+                        {
+                            EngineName = "liligo.hu",
+                            Tickets = a.ToArray()
+                        }));
+            grdResults.DataSource = ResultSets;
+            grdResults.Refresh();
         }
 
         private void cbIsRet_CheckedChanged(object sender, EventArgs e)
@@ -124,11 +129,11 @@ namespace PlaneTicketAdvisorCS
 
         private void btnAdd_Click(object sender, EventArgs e)
         {
-            _travelManager.AddTravel(tbFrom.Text,tbTo.Text,dtDep.Value,(int) spAdult.Value,(int) spChild.Value,(int) spInfant.Value);
+            _travelSearchManager.AddTravel(tbFrom.Text,tbTo.Text,dtDep.Value,(int) spAdult.Value,(int) spChild.Value,(int) spInfant.Value);
             if(cbIsRet.Checked)
-                _travelManager.AddTravel(tbTo.Text, tbFrom.Text, dtRet.Value, (int) spAdult.Value, (int) spChild.Value, (int) spInfant.Value);
+                _travelSearchManager.AddTravel(tbTo.Text, tbFrom.Text, dtRet.Value, (int) spAdult.Value, (int) spChild.Value, (int) spInfant.Value);
 
-            grdTravels.DataSource = _travelManager.FlightList.ToList();
+            grdTravels.DataSource = _travelSearchManager.FlightList.ToList();
         }
 
         private void dtDep_ValueChanged(object sender, EventArgs e)
@@ -143,6 +148,16 @@ namespace PlaneTicketAdvisorCS
         private void runtestToolStripMenuItem_Click(object sender, EventArgs e)
         {
             _liligo.TestImageExp();
+        }
+
+        private void grdResults_SelectionChanged(object sender, EventArgs e)
+        {
+            if (grdResults.SelectedRows.Count == 0) dvSelected.Visible = false;
+            else
+            {
+                dvSelected.SetTicket((ResultSet)grdResults.SelectedRows[0].DataBoundItem);
+                dvSelected.Visible = true;
+            }
         }
 
     }

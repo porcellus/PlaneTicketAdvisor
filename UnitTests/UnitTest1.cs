@@ -10,7 +10,7 @@ namespace UnitTests
         [TestMethod]
         public void TestMethod1()
         {
-            var myTravelManager = new TravelManager(new ITravelSearchEngine[0]);
+            var myTravelManager = new TravelSearchManager(new ITravelSearchEngine[0]);
 
             myTravelManager.AddTravel("Budapest", "London", DateTime.Today.AddDays(3));
             myTravelManager.AddTravel("London", "Budapest", DateTime.Today.AddDays(4));

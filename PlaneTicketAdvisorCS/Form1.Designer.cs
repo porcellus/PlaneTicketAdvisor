@@ -42,12 +42,10 @@
             this.statusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.splitContainer = new System.Windows.Forms.SplitContainer();
             this.grdTravels = new System.Windows.Forms.DataGridView();
-            this.listView1 = new System.Windows.Forms.ListView();
-            this.From = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.To = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.Price = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.grdResults = new System.Windows.Forms.DataGridView();
             this.panel1 = new System.Windows.Forms.Panel();
             this.cbIsRet = new System.Windows.Forms.CheckBox();
+            this.btnSearch = new System.Windows.Forms.Button();
             this.label8 = new System.Windows.Forms.Label();
             this.spInfant = new System.Windows.Forms.NumericUpDown();
             this.label7 = new System.Windows.Forms.Label();
@@ -57,7 +55,6 @@
             this.label5 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.dtRet = new System.Windows.Forms.DateTimePicker();
-            this.btnSearch = new System.Windows.Forms.Button();
             this.tbTo = new System.Windows.Forms.TextBox();
             this.tbFrom = new System.Windows.Forms.TextBox();
             this.btnAdd = new System.Windows.Forms.Button();
@@ -65,6 +62,8 @@
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
+            this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
+            this.dvSelected = new PlaneTicketAdvisorCS.DetailView();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer)).BeginInit();
@@ -72,10 +71,12 @@
             this.splitContainer.Panel2.SuspendLayout();
             this.splitContainer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.grdTravels)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.grdResults)).BeginInit();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.spInfant)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.spChild)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.spAdult)).BeginInit();
+            this.flowLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -86,7 +87,7 @@
             this.runtestToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(736, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(746, 24);
             this.menuStrip1.TabIndex = 1;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -151,9 +152,9 @@
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.progressBar,
             this.statusLabel});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 617);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 579);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(736, 22);
+            this.statusStrip1.Size = new System.Drawing.Size(746, 22);
             this.statusStrip1.TabIndex = 3;
             this.statusStrip1.Text = "statusStrip1";
             // 
@@ -172,7 +173,7 @@
             this.splitContainer.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.splitContainer.Location = new System.Drawing.Point(0, 142);
+            this.splitContainer.Location = new System.Drawing.Point(0, 124);
             this.splitContainer.Name = "splitContainer";
             this.splitContainer.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
@@ -182,9 +183,10 @@
             // 
             // splitContainer.Panel2
             // 
-            this.splitContainer.Panel2.Controls.Add(this.listView1);
-            this.splitContainer.Size = new System.Drawing.Size(736, 472);
-            this.splitContainer.SplitterDistance = 112;
+            this.splitContainer.Panel2.Controls.Add(this.flowLayoutPanel1);
+            this.splitContainer.Panel2.Controls.Add(this.grdResults);
+            this.splitContainer.Size = new System.Drawing.Size(734, 452);
+            this.splitContainer.SplitterDistance = 84;
             this.splitContainer.TabIndex = 6;
             // 
             // grdTravels
@@ -193,8 +195,8 @@
             this.grdTravels.AllowUserToDeleteRows = false;
             this.grdTravels.AllowUserToResizeRows = false;
             this.grdTravels.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            this.grdTravels.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCellsExceptHeaders;
-            this.grdTravels.BackgroundColor = System.Drawing.SystemColors.ControlDark;
+            this.grdTravels.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllHeaders;
+            this.grdTravels.BackgroundColor = System.Drawing.SystemColors.Control;
             this.grdTravels.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.grdTravels.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.grdTravels.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -203,39 +205,36 @@
             this.grdTravels.Location = new System.Drawing.Point(0, 0);
             this.grdTravels.Name = "grdTravels";
             this.grdTravels.ReadOnly = true;
-            this.grdTravels.Size = new System.Drawing.Size(736, 112);
+            this.grdTravels.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.grdTravels.Size = new System.Drawing.Size(734, 84);
             this.grdTravels.TabIndex = 3;
             this.grdTravels.RowsAdded += new System.Windows.Forms.DataGridViewRowsAddedEventHandler(this.grdTravels_RowsAdded);
             // 
-            // listView1
+            // grdResults
             // 
-            this.listView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.From,
-            this.To,
-            this.Price});
-            this.listView1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.listView1.Location = new System.Drawing.Point(0, 0);
-            this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(736, 356);
-            this.listView1.TabIndex = 0;
-            this.listView1.UseCompatibleStateImageBehavior = false;
-            this.listView1.View = System.Windows.Forms.View.Details;
-            // 
-            // From
-            // 
-            this.From.Text = "Honnan";
-            // 
-            // To
-            // 
-            this.To.Text = "Hova";
-            // 
-            // Price
-            // 
-            this.Price.Text = "Ár";
+            this.grdResults.AllowUserToAddRows = false;
+            this.grdResults.AllowUserToDeleteRows = false;
+            this.grdResults.AllowUserToResizeRows = false;
+            this.grdResults.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.grdResults.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCellsExceptHeaders;
+            this.grdResults.BackgroundColor = System.Drawing.SystemColors.Control;
+            this.grdResults.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.grdResults.Dock = System.Windows.Forms.DockStyle.Left;
+            this.grdResults.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
+            this.grdResults.GridColor = System.Drawing.SystemColors.Control;
+            this.grdResults.Location = new System.Drawing.Point(0, 0);
+            this.grdResults.MultiSelect = false;
+            this.grdResults.Name = "grdResults";
+            this.grdResults.ReadOnly = true;
+            this.grdResults.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.grdResults.Size = new System.Drawing.Size(220, 364);
+            this.grdResults.TabIndex = 2;
+            this.grdResults.SelectionChanged += new System.EventHandler(this.grdResults_SelectionChanged);
             // 
             // panel1
             // 
             this.panel1.Controls.Add(this.cbIsRet);
+            this.panel1.Controls.Add(this.btnSearch);
             this.panel1.Controls.Add(this.label8);
             this.panel1.Controls.Add(this.spInfant);
             this.panel1.Controls.Add(this.label7);
@@ -245,7 +244,6 @@
             this.panel1.Controls.Add(this.label5);
             this.panel1.Controls.Add(this.label4);
             this.panel1.Controls.Add(this.dtRet);
-            this.panel1.Controls.Add(this.btnSearch);
             this.panel1.Controls.Add(this.tbTo);
             this.panel1.Controls.Add(this.tbFrom);
             this.panel1.Controls.Add(this.btnAdd);
@@ -255,7 +253,7 @@
             this.panel1.Controls.Add(this.label1);
             this.panel1.Location = new System.Drawing.Point(0, 27);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(736, 109);
+            this.panel1.Size = new System.Drawing.Size(736, 91);
             this.panel1.TabIndex = 5;
             // 
             // cbIsRet
@@ -270,6 +268,16 @@
             this.cbIsRet.Text = "Oda-Vissza";
             this.cbIsRet.UseVisualStyleBackColor = true;
             this.cbIsRet.CheckedChanged += new System.EventHandler(this.cbIsRet_CheckedChanged);
+            // 
+            // btnSearch
+            // 
+            this.btnSearch.Location = new System.Drawing.Point(510, 55);
+            this.btnSearch.Name = "btnSearch";
+            this.btnSearch.Size = new System.Drawing.Size(75, 23);
+            this.btnSearch.TabIndex = 9;
+            this.btnSearch.Text = "Keres";
+            this.btnSearch.UseVisualStyleBackColor = true;
+            this.btnSearch.Click += new System.EventHandler(this.btnSearch_Click);
             // 
             // label8
             // 
@@ -349,16 +357,6 @@
             this.dtRet.Size = new System.Drawing.Size(200, 20);
             this.dtRet.TabIndex = 10;
             // 
-            // btnSearch
-            // 
-            this.btnSearch.Location = new System.Drawing.Point(6, 83);
-            this.btnSearch.Name = "btnSearch";
-            this.btnSearch.Size = new System.Drawing.Size(75, 23);
-            this.btnSearch.TabIndex = 9;
-            this.btnSearch.Text = "Keres";
-            this.btnSearch.UseVisualStyleBackColor = true;
-            this.btnSearch.Click += new System.EventHandler(this.btnSearch_Click);
-            // 
             // tbTo
             // 
             this.tbTo.Location = new System.Drawing.Point(304, 4);
@@ -377,7 +375,7 @@
             // 
             // btnAdd
             // 
-            this.btnAdd.Location = new System.Drawing.Point(96, 83);
+            this.btnAdd.Location = new System.Drawing.Point(510, 4);
             this.btnAdd.Name = "btnAdd";
             this.btnAdd.Size = new System.Drawing.Size(75, 23);
             this.btnAdd.TabIndex = 6;
@@ -420,11 +418,31 @@
             this.label1.TabIndex = 0;
             this.label1.Text = "Honnan";
             // 
+            // flowLayoutPanel1
+            // 
+            this.flowLayoutPanel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.flowLayoutPanel1.Controls.Add(this.dvSelected);
+            this.flowLayoutPanel1.Location = new System.Drawing.Point(227, 4);
+            this.flowLayoutPanel1.Name = "flowLayoutPanel1";
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(504, 357);
+            this.flowLayoutPanel1.TabIndex = 3;
+            // 
+            // dvSelected
+            // 
+            this.dvSelected.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dvSelected.Location = new System.Drawing.Point(3, 3);
+            this.dvSelected.Name = "dvSelected";
+            this.dvSelected.Size = new System.Drawing.Size(501, 151);
+            this.dvSelected.TabIndex = 4;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(736, 639);
+            this.ClientSize = new System.Drawing.Size(746, 601);
             this.Controls.Add(this.splitContainer);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.statusStrip1);
@@ -441,11 +459,13 @@
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer)).EndInit();
             this.splitContainer.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.grdTravels)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.grdResults)).EndInit();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.spInfant)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.spChild)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.spAdult)).EndInit();
+            this.flowLayoutPanel1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -484,11 +504,10 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.ListView listView1;
-        private System.Windows.Forms.ColumnHeader From;
-        private System.Windows.Forms.ColumnHeader To;
-        private System.Windows.Forms.ColumnHeader Price;
         private System.Windows.Forms.ToolStripMenuItem runtestToolStripMenuItem;
+        private System.Windows.Forms.DataGridView grdResults;
+        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
+        private DetailView dvSelected;
     }
 }
 

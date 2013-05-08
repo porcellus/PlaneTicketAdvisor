@@ -8,40 +8,36 @@ namespace BusinessLogic
 {
     public class Ticket
     {
-        [DisplayName("Ár")]
         public long Price { get; set; }
-        [DisplayName("Ár/fő")]
         public long Perprice { get; set; }
 
-        [DisplayName("Légitársaság-oda")]
         public string OutCompany { get; set; }
 
-        [DisplayName("Induló reptér-oda")]
         public string OutStartStation { get; set; }
 
-        [DisplayName("Indulási idő-oda")]
-        public DateTime OutStartTime { get; set; }
+        public DateTime OutStartDate { get; set; }
+        public TimeSpan OutStartTime { get; set; }
 
-        [DisplayName("Erkezési állomás-oda")]
         public string OutArriveStation { get; set; }
 
-        [DisplayName("Erkezési idő-oda")]
-        public DateTime OutArriveTime { get; set; }
+        public TimeSpan OutArriveTime { get; set; }
 
-        [DisplayName("Légitársaság-vissza")]
         public string RetCompany { get; set; }
 
-        [DisplayName("Indulási reptér-vissza")]
         public string BackStartStation { get; set; }
 
-        [DisplayName("Indulási idő-vissza")]
-        public DateTime BackStartTime { get; set; }
+        public DateTime BackStartDate { get; set; }
+        public TimeSpan BackStartTime { get; set; }
 
-        [DisplayName("Erkezési állomás-vissza")]
         public string BackArriveStation { get; set; }
 
-        [DisplayName("Erkezési idő-vissza")]
-        public DateTime BackArriveTime { get; set; }
+        public TimeSpan BackArriveTime { get; set; }
+
+        public int OutStops { get; set; }
+        public int BackStops { get; set; }
+
+        public TimeSpan OutTravelTime { get; set; }
+        public TimeSpan BackTravelTime { get; set; }
 
         public Ticket(string str)
         {
@@ -59,21 +55,33 @@ namespace BusinessLogic
 
                     case "outCompany": OutCompany = tmp[1]; break;
                     case "backCompany": RetCompany = tmp[1]; break;
-
+                        
                     case "outStartStation": OutStartStation = tmp[1]; break;
                     case "backStartStation": BackStartStation = tmp[1]; break;
+                        
+                    case "outStartDate": OutStartDate = DateTime.Parse(tmp[1]); break;
+                    case "outStartTime": OutStartTime = TimeSpan.Parse(tmp[1]); break;
 
-                    case "outStartTime": OutStartTime = DateTime.Parse(tmp[1]); break;
-                    case "backStartTime": BackStartTime = DateTime.Parse(tmp[1]); break;
+                    case "backStartDate": BackStartDate = DateTime.Parse(tmp[1]); break;
+                    case "backStartTime": BackStartTime = TimeSpan.Parse(tmp[1]); break;
 
-                    case "outArriveTime": OutArriveTime = DateTime.Parse(tmp[1]); break;
-                    case "backArriveTime": BackArriveTime = DateTime.Parse(tmp[1]); break;
+                    case "outArriveTime": OutArriveTime = TimeSpan.Parse(tmp[1]); break;
+                    case "backArriveTime": BackArriveTime = TimeSpan.Parse(tmp[1]); break;
+
                     case "outArriveStation": OutArriveStation = tmp[1]; break;
                     case "backArriveStation": BackArriveStation = tmp[1]; break;
+
+                    case "outStops ": OutStops = int.Parse(tmp[1]);break;
+                    case "backStops ": BackStops = int.Parse(tmp[1]); break;
+
+                    case "outTravelTime": OutTravelTime = TimeSpan.Parse(tmp[1]); break;
+                    case "backTravelTime": BackTravelTime = TimeSpan.Parse(tmp[1]); break;
                 }
             }
         }
+
     }
+
     public class Travel : IEquatable<Travel>
     {
         #region Equatable
@@ -160,6 +168,49 @@ namespace BusinessLogic
         }
     }
 
+    public struct ResultSet
+    {
+        private string _engineName;
+        private Ticket[] _tickets;
+
+        public int TicketCount
+        {
+            get { return Tickets.Count(); }
+        }
+
+        public long SumPrice {
+            get { return Tickets.Sum(a => a.Price); }
+        }
+
+        public int SumStops
+        {
+            get { return Tickets.Sum(a => a.OutStops + a.BackStops); }
+        }
+
+        public TimeSpan SumTravelTime
+        {
+            get { return Tickets.Aggregate(new TimeSpan(),(cSpan,a) => cSpan + a.OutTravelTime + a.BackTravelTime); }
+        }
+
+        public string EngineName
+        {
+            get { return _engineName; }
+            set { _engineName = value; }
+        }
+
+        public Ticket[] Tickets
+        {
+            get { return _tickets ?? new Ticket[0]; }
+            set { _tickets = value; }
+        }
+
+        public ResultSet(string engineName, Ticket[] tickets = null)
+        {
+            _engineName = engineName;
+            _tickets = tickets;
+        }
+    }
+
     public interface ITravelSearchEngine: IDisposable
     {
         void Initialize();
@@ -169,6 +220,6 @@ namespace BusinessLogic
         void ClearSearches();
 
         double GetProgressPercent();
-        IDictionary<Search, List<Ticket>> GetResults();
+        IDictionary<Search, ResultSet> GetResults();
     }
 }

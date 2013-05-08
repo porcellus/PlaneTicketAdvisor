@@ -142,6 +142,24 @@ namespace PlaneTicketAdvisorCS.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Kereső.
+        /// </summary>
+        internal static string Form1_Form1_Load_SearchEngineName {
+            get {
+                return ResourceManager.GetString("Form1_Form1_Load_SearchEngineName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Jegyek.
+        /// </summary>
+        internal static string Form1_Form1_Load_TicketCount {
+            get {
+                return ResourceManager.GetString("Form1_Form1_Load_TicketCount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Hova.
         /// </summary>
         internal static string Form1_Form1_Load_To {

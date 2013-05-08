@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace BusinessLogic
 {
-    public class TravelManager
+    public class TravelSearchManager
     {
         private static List<List<Ticket>> Combine(List<List<Ticket>> lists, IEnumerable<Ticket> nList)
         {
@@ -35,7 +35,7 @@ namespace BusinessLogic
         private List<List<Search>> _searchPlans;
 #endregion
 
-        public TravelManager(ITravelSearchEngine[] searchEngines)
+        public TravelSearchManager(ITravelSearchEngine[] searchEngines)
         {
             _searchEngines = searchEngines;
             foreach (var engine in searchEngines)
@@ -49,6 +49,11 @@ namespace BusinessLogic
         public void AddTravel(string @from,string to, DateTime date, int adults = 1, int children = 0, int infants = 0)
         {
             if(!IsSearchInProgress) FlightList.Add(new Travel(from, to, date, adults, children, infants));
+        }
+
+        public void RemoveTravel(int ind)
+        {
+            if(!IsSearchInProgress) FlightList.RemoveAt(ind);
         }
 
         public void CancelSearch()
@@ -126,9 +131,12 @@ namespace BusinessLogic
 
         public List<List<Ticket>> GetResults()
         {
-            var resultSets = new Dictionary< Travel ,List<Ticket>>();
+            var resultSets = new Dictionary<Travel, List<Ticket>>();
+            var retVal = new List<List<Ticket>>();
 
-            var tmp = new Dictionary<ITravelSearchEngine, IDictionary<Search, List<Ticket>>>();
+            if (_searchPlans.Count == 0) return retVal;
+
+            var tmp = new Dictionary<ITravelSearchEngine, IDictionary<Search, ResultSet>>();
             foreach (var engine in _searchEngines)
                 tmp[engine] = engine.GetResults();
 
@@ -139,7 +147,7 @@ namespace BusinessLogic
                 {
                     if (tmp[engine].ContainsKey(search))
                     {
-                        resultSets[search].AddRange(tmp[engine][search].OrderBy(a => a.Price).Take(2));
+                        resultSets[search].AddRange(tmp[engine][search].Tickets.OrderBy(a => a.Price).Take(2));
                     }
                 }
 
@@ -151,7 +159,6 @@ namespace BusinessLogic
                         resultSets[search] = _cache.Last(a=>Equals(a.Key.Item1,search)).Value;
                 }
             }
-            var retVal = new List<List<Ticket>>();
 
             foreach (var plan in _searchPlans)
             {

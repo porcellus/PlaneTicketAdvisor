@@ -16,7 +16,7 @@ namespace WebMiner
         private const int SearchDelay = 3000;
         private readonly Queue<Search> _searchList = new Queue<Search>();
         private readonly Dictionary<Search, Thread> _searchThreads = new Dictionary<Search, Thread>();
-        private readonly ConcurrentDictionary<Search, List<Ticket>> _searchResults = new ConcurrentDictionary<Search, List<Ticket>>();
+        private readonly ConcurrentDictionary<Search, ResultSet> _searchResults = new ConcurrentDictionary<Search, ResultSet>();
         private readonly Dictionary<Search, int>  _searchProgresses = new Dictionary<Search, int>();
         private readonly Dictionary<Search, BrowserSimulator> _searchBrowsers = new Dictionary<Search, BrowserSimulator>();
         private readonly Dictionary<Search, Timer> _searchTimers = new Dictionary<Search, Timer>();
@@ -76,9 +76,9 @@ namespace WebMiner
             return _searchProgresses.Sum(a => a.Value) * 1.25 / (_searchList.Count + _searchProgresses.Count);
         }
 
-        public IDictionary<Search, List<Ticket>> GetResults()
+        public IDictionary<Search, ResultSet> GetResults()
         {
-            return (IDictionary<Search, List<Ticket>>) _searchResults ?? new Dictionary<Search, List<Ticket>>();
+            return (IDictionary<Search, ResultSet>)_searchResults ?? new Dictionary<Search, ResultSet>();
         }
 
         public void Dispose()
@@ -149,19 +149,37 @@ namespace WebMiner
         
                             outCompany: x.getElementsByClassName('company')[1].getElementsByClassName('content')[0].innerHTML.trim(),
         
+                            outStartDate: document.getElementsByClassName('header-summary')[0].getElementsByClassName('dates')[1].innerHTML.trim(),
                             outStartTime: x.getElementsByClassName('from-time')[1].getElementsByClassName('content')[0].innerHTML.trim(),
                             outStartStation: x.getElementsByClassName('from-station')[1].getElementsByClassName('content')[0].innerHTML.trim(),
         
                             outArriveTime: x.getElementsByClassName('to-time')[1].getElementsByClassName('content')[0].innerHTML.trim(),
                             outArriveStation: x.getElementsByClassName('to-station')[1].getElementsByClassName('content')[0].innerHTML.trim(),
+                            outStops: x.getElementsByClassName('stops')[1]
+                                                .getElementsByTagName('span')[2].innerHTML.trim() == 'közvetlen'? '0' : 
+                                                 x.getElementsByClassName('stops')[1]
+                                                  .getElementsByTagName('span')[2].innerHTML.trim()
+                                                  .substr(0,x.getElementsByClassName('stops')[1]
+                                                    .getElementsByTagName('span')[2].innerHTML.trim().indexOf(' ')
+                                            ),
+                            outTravelTime: x.getElementsByClassName('stops')[1].getElementsByTagName('span')[1].innerHTML.trim().replace('ó',':').substr(1,4)
                         };
     
                         if(x.getElementsByClassName('company').length >= 2 && x.getElementsByClassName('company')[1].getElementsByClassName('content').length >= 2){
                             obj.backCompany = x.getElementsByClassName('company')[1].getElementsByClassName('content')[1].innerHTML.trim();
                             obj.backStartStation = x.getElementsByClassName('from-station')[1].getElementsByClassName('content')[1].innerHTML.trim();
+                            obj.backStartDate= document.getElementsByClassName('header-summary')[0].getElementsByClassName('dates')[1].innerHTML.trim();
                             obj.backStartTime = x.getElementsByClassName('from-time')[1].getElementsByClassName('content')[1].innerHTML.trim();
                             obj.backArriveStation = x.getElementsByClassName('to-station')[1].getElementsByClassName('content')[1].innerHTML.trim();
                             obj.backArriveTime = x.getElementsByClassName('to-time')[1].getElementsByClassName('content')[1].innerHTML.trim();
+                            obj.backStops= x.getElementsByClassName('stops')[1]
+                                                .getElementsByTagName('span')[2].innerHTML.trim() == 'közvetlen'? '0' : 
+                                                 x.getElementsByClassName('stops')[1]
+                                                  .getElementsByTagName('span')[2].innerHTML.trim()
+                                                  .substr(0,x.getElementsByClassName('stops')[1]
+                                                    .getElementsByTagName('span')[2].innerHTML.trim().indexOf(' ')
+                                            );
+                            obj.backTravelTime= x.getElementsByClassName('stops')[1].getElementsByTagName('span')[3].innerHTML.trim().replace('ó',':').substr(1,4);
                         }
     
                         return obj;
@@ -193,9 +211,15 @@ namespace WebMiner
             Debug.Assert(search != null, "search != null");
             if(!_searchBrowsers[search].IsDocumentReady) return;
             Awesomium.Core.JSValue[] res = _searchBrowsers[search].ExecuteJavascriptWithResult("objArrayToString(getResults());");
-            if(res.Count() > 0)
-                _searchResults[search] = (from r in res select new Ticket(r.ToString())).ToList();
-            else _searchResults[search] = new List<Ticket>();
+            if (res.Count() > 0 && !res[0].IsUndefined)
+                _searchResults[search] = new ResultSet("liligo", (from r in res select new Ticket(r.ToString())).ToArray());
+            else _searchResults[search] = new ResultSet("liligo");
+            /*
+             foreach (var result in _searchResults[search].Tickets)
+            {
+                result.OutStartDate = search.Date;
+                if(search.RetDate.HasValue) result.BackStartDate = search.RetDate.Value.Date;
+            }*/
             var isOver = _searchBrowsers[search].ExecuteJavascriptWithResult(
                     "(function(){return document.getElementsByClassName('stopped-finished').length == 1})()");
             if (isOver.IsBoolean && (bool)isOver)
