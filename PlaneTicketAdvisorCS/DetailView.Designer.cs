@@ -35,8 +35,12 @@
             this.label3 = new System.Windows.Forms.Label();
             this.lPrice = new System.Windows.Forms.Label();
             this.btnPin = new System.Windows.Forms.Button();
-            this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
+            this.grdTickets = new System.Windows.Forms.DataGridView();
+            this.label4 = new System.Windows.Forms.Label();
+            this.lSumStops = new System.Windows.Forms.Label();
+            this.lSumTravelTime = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            ((System.ComponentModel.ISupportInitialize)(this.grdTickets)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
@@ -79,7 +83,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(122, 21);
+            this.label3.Location = new System.Drawing.Point(246, 0);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(42, 13);
             this.label3.TabIndex = 4;
@@ -88,7 +92,7 @@
             // lPrice
             // 
             this.lPrice.AutoSize = true;
-            this.lPrice.Location = new System.Drawing.Point(171, 21);
+            this.lPrice.Location = new System.Drawing.Point(295, 0);
             this.lPrice.Name = "lPrice";
             this.lPrice.Size = new System.Drawing.Size(0, 13);
             this.lPrice.TabIndex = 5;
@@ -104,20 +108,61 @@
             this.btnPin.UseVisualStyleBackColor = true;
             this.btnPin.Click += new System.EventHandler(this.btnPin_Click);
             // 
-            // dataGridView1
+            // grdTickets
             // 
-            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.dataGridView1.Location = new System.Drawing.Point(0, 49);
-            this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.Size = new System.Drawing.Size(434, 102);
-            this.dataGridView1.TabIndex = 8;
+            this.grdTickets.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.grdTickets.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.grdTickets.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.grdTickets.Location = new System.Drawing.Point(0, 49);
+            this.grdTickets.MultiSelect = false;
+            this.grdTickets.Name = "grdTickets";
+            this.grdTickets.ReadOnly = true;
+            this.grdTickets.Size = new System.Drawing.Size(434, 102);
+            this.grdTickets.TabIndex = 8;
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(225, 20);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(63, 13);
+            this.label4.TabIndex = 9;
+            this.label4.Text = "Átszállások:";
+            // 
+            // lSumStops
+            // 
+            this.lSumStops.AutoSize = true;
+            this.lSumStops.Location = new System.Drawing.Point(172, 21);
+            this.lSumStops.Name = "lSumStops";
+            this.lSumStops.Size = new System.Drawing.Size(0, 13);
+            this.lSumStops.TabIndex = 10;
+            // 
+            // lSumTravelTime
+            // 
+            this.lSumTravelTime.AutoSize = true;
+            this.lSumTravelTime.Location = new System.Drawing.Point(357, 22);
+            this.lSumTravelTime.Name = "lSumTravelTime";
+            this.lSumTravelTime.Size = new System.Drawing.Size(0, 13);
+            this.lSumTravelTime.TabIndex = 11;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(134, 21);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(32, 13);
+            this.label5.TabIndex = 12;
+            this.label5.Text = "Útidő";
             // 
             // DetailView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.dataGridView1);
+            this.Controls.Add(this.label5);
+            this.Controls.Add(this.lSumTravelTime);
+            this.Controls.Add(this.lSumStops);
+            this.Controls.Add(this.label4);
+            this.Controls.Add(this.grdTickets);
             this.Controls.Add(this.btnPin);
             this.Controls.Add(this.lPrice);
             this.Controls.Add(this.label3);
@@ -127,7 +172,7 @@
             this.Controls.Add(this.label1);
             this.Name = "DetailView";
             this.Size = new System.Drawing.Size(434, 151);
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.grdTickets)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -142,6 +187,10 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label lPrice;
         private System.Windows.Forms.Button btnPin;
-        private System.Windows.Forms.DataGridView dataGridView1;
+        private System.Windows.Forms.DataGridView grdTickets;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label lSumStops;
+        private System.Windows.Forms.Label lSumTravelTime;
+        private System.Windows.Forms.Label label5;
     }
 }

@@ -46,7 +46,7 @@
     
     mimetype: application/x-microsoft.net.object.binary.base64
     value   : The object must be serialized with 
-            : System.Serialization.Formatters.Binary.BinaryFormatter
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
             : and then encoded with base64 encoding.
     
     mimetype: application/x-microsoft.net.object.soap.base64
@@ -60,6 +60,7 @@
             : and then encoded with base64 encoding.
     -->
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
         <xsd:choice maxOccurs="unbounded">
@@ -68,9 +69,10 @@
               <xsd:sequence>
                 <xsd:element name="value" type="xsd:string" minOccurs="0" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" />
+              <xsd:attribute name="name" use="required" type="xsd:string" />
               <xsd:attribute name="type" type="xsd:string" />
               <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="assembly">
@@ -85,9 +87,10 @@
                 <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
                 <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" msdata:Ordinal="1" />
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
               <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
               <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="resheader">
@@ -109,10 +112,10 @@
     <value>2.0</value>
   </resheader>
   <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Form1_resultCheck_Tick_Kész" xml:space="preserve">
     <value>Kész</value>
@@ -157,5 +160,65 @@
   </data>
   <data name="Form1_Form1_Load_SearchEngineName" xml:space="preserve">
     <value>Kereső</value>
+  </data>
+  <data name="Form1_Form1_Load_Stops" xml:space="preserve">
+    <value>Átszállások</value>
+  </data>
+  <data name="Form1_Form1_Load_TravelTime" xml:space="preserve">
+    <value>Útidő</value>
+  </data>
+  <data name="DetailView_DetailView_PerPrice" xml:space="preserve">
+    <value>Ár/fő</value>
+  </data>
+  <data name="DetailView_DetailView_BackTravelTime" xml:space="preserve">
+    <value>Utazási idő (vissza)</value>
+  </data>
+  <data name="DetailView_DetailView_TravelTimeOut" xml:space="preserve">
+    <value>Utazási idő (oda)</value>
+  </data>
+  <data name="DetailView_DetailView_OutTravelTime" xml:space="preserve">
+    <value>Utazási idő (oda)</value>
+  </data>
+  <data name="DetailView_DetailView_BackStops" xml:space="preserve">
+    <value>Átszállások (vissza)</value>
+  </data>
+  <data name="DetailView_DetailView_OutStops" xml:space="preserve">
+    <value>Átszállások (oda)</value>
+  </data>
+  <data name="DetailView_DetailView_BackArriveTime" xml:space="preserve">
+    <value>Érkezési idő (vissza)</value>
+  </data>
+  <data name="DetailView_DetailView_BackArriveStation" xml:space="preserve">
+    <value>Érkezési állomás (vissza)</value>
+  </data>
+  <data name="DetailView_DetailView_BackStartTime" xml:space="preserve">
+    <value>Indulási idő (vissza)</value>
+  </data>
+  <data name="DetailView_DetailView_BackStartDate" xml:space="preserve">
+    <value>Indulási dátum (vissza)</value>
+  </data>
+  <data name="DetailView_DetailView_BackStartStation" xml:space="preserve">
+    <value>Induló állomás (vissza)</value>
+  </data>
+  <data name="DetailView_DetailView_RetCompany" xml:space="preserve">
+    <value>Cég (vissza)</value>
+  </data>
+  <data name="DetailView_DetailView_OutArriveTime" xml:space="preserve">
+    <value>Érkezési idő (oda)</value>
+  </data>
+  <data name="DetailView_DetailView_OutArriveStation" xml:space="preserve">
+    <value>Érkezési állomás (oda)</value>
+  </data>
+  <data name="DetailView_DetailView_OutStartTime" xml:space="preserve">
+    <value>Indulási idő (oda)</value>
+  </data>
+  <data name="DetailView_DetailView_OutStartDate" xml:space="preserve">
+    <value>Indulási dátum (oda)</value>
+  </data>
+  <data name="DetailView_DetailView_OutStartStation" xml:space="preserve">
+    <value>Induló állomás (oda)</value>
+  </data>
+  <data name="DetailView_DetailView_OutCompany" xml:space="preserve">
+    <value>Cég (oda)</value>
   </data>
 </root>

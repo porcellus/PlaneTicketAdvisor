@@ -30,7 +30,7 @@ namespace WebMiner
         {
             new Task(delegate
                 {
-                    while (_activeSearches < MaxSearchCount && _searchList.Count > 0)
+                    while(_activeSearches < MaxSearchCount && _searchList.Count > 0)
                     {
                         var search = _searchList.Dequeue();
                         _searchBrowsers[search] = new BrowserSimulator("http://liligo.hu");

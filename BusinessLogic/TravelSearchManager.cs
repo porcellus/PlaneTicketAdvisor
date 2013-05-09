@@ -26,7 +26,7 @@ namespace BusinessLogic
 #region Fields
         public List<Travel> FlightList { get; private set; }
 
-        private readonly Dictionary<Tuple<Search,DateTime>, List<Ticket>> _cache = new Dictionary<Tuple<Search, DateTime>, List<Ticket>>();
+        //private readonly Dictionary<Tuple<Search,DateTime>, List<Ticket>> _cache = new Dictionary<Tuple<Search, DateTime>, List<Ticket>>();
 
         private readonly ITravelSearchEngine[] _searchEngines;
 
@@ -108,7 +108,7 @@ namespace BusinessLogic
             return retVal;
         }
 
-        public void StartSearch(bool forceRefresh = false)
+        public void StartSearch(/*bool forceRefresh = false*/)
         {
             if (FlightList.Count == 0) return;
 
@@ -118,10 +118,11 @@ namespace BusinessLogic
 
             foreach (var engine in _searchEngines)
             {
+                engine.ClearSearches();
                 foreach (var search in reqSearches)
                 {
-                    if (forceRefresh ||
-                        !_cache.Any(a => Equals(a.Key.Item1, search) && a.Key.Item2 >= DateTime.Now.AddMinutes(10)))
+                    //if (forceRefresh ||
+                        //!_cache.Any(a => Equals(a.Key.Item1, search) && a.Key.Item2 >= DateTime.Now.AddMinutes(10)))
                         engine.AddSearch(search);
                 }
                 engine.StartSearches();
@@ -129,10 +130,10 @@ namespace BusinessLogic
         }
 
 
-        public List<List<Ticket>> GetResults()
+        public List<ResultSet> GetResults()
         {
             var resultSets = new Dictionary<Travel, List<Ticket>>();
-            var retVal = new List<List<Ticket>>();
+            var retVal = new List<ResultSet>();
 
             if (_searchPlans.Count == 0) return retVal;
 
@@ -147,27 +148,27 @@ namespace BusinessLogic
                 {
                     if (tmp[engine].ContainsKey(search))
                     {
-                        resultSets[search].AddRange(tmp[engine][search].Tickets.OrderBy(a => a.Price).Take(2));
+                        resultSets[search].AddRange(tmp[engine][search].Tickets.OrderBy(a => a.Price));
                     }
                 }
-
+                /*
                 if (resultSets[search].Count != 0)
                     _cache.Add(new Tuple<Search, DateTime>(search, DateTime.UtcNow), resultSets[search]);
                 else
                 {
                     if (_cache.Any(a=> Equals(a.Key.Item1, search) && a.Key.Item2 >= DateTime.Now.AddHours(-1)))
                         resultSets[search] = _cache.Last(a=>Equals(a.Key.Item1,search)).Value;
-                }
+                }*/
             }
 
             foreach (var plan in _searchPlans)
             {
                 var result = plan.Aggregate(new List<List<Ticket>> {new List<Ticket>()}, (current, search) => Combine(current, resultSets[search]));
 
-                retVal.AddRange(result);
+                retVal.AddRange(result.Select(a=> new ResultSet("liligo.hu", a.ToArray()) ));
             }
 
-            retVal = retVal.OrderBy(a => a.Sum(c => c.Price)).ToList();
+            retVal = retVal.OrderBy(a => a.SumPrice).ToList();
 
             return retVal.Take(100).ToList();
         }

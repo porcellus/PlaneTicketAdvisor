@@ -42,10 +42,13 @@
             this.statusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.splitContainer = new System.Windows.Forms.SplitContainer();
             this.grdTravels = new System.Windows.Forms.DataGridView();
+            this.btnRemove = new System.Windows.Forms.Button();
+            this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
+            this.dvSelected = new PlaneTicketAdvisorCS.DetailView();
+            this.btnSearch = new System.Windows.Forms.Button();
             this.grdResults = new System.Windows.Forms.DataGridView();
             this.panel1 = new System.Windows.Forms.Panel();
             this.cbIsRet = new System.Windows.Forms.CheckBox();
-            this.btnSearch = new System.Windows.Forms.Button();
             this.label8 = new System.Windows.Forms.Label();
             this.spInfant = new System.Windows.Forms.NumericUpDown();
             this.label7 = new System.Windows.Forms.Label();
@@ -62,8 +65,6 @@
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
-            this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
-            this.dvSelected = new PlaneTicketAdvisorCS.DetailView();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer)).BeginInit();
@@ -71,12 +72,12 @@
             this.splitContainer.Panel2.SuspendLayout();
             this.splitContainer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.grdTravels)).BeginInit();
+            this.flowLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.grdResults)).BeginInit();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.spInfant)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.spChild)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.spAdult)).BeginInit();
-            this.flowLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -173,6 +174,8 @@
             this.splitContainer.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.splitContainer.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.splitContainer.IsSplitterFixed = true;
             this.splitContainer.Location = new System.Drawing.Point(0, 124);
             this.splitContainer.Name = "splitContainer";
             this.splitContainer.Orientation = System.Windows.Forms.Orientation.Horizontal;
@@ -183,10 +186,12 @@
             // 
             // splitContainer.Panel2
             // 
+            this.splitContainer.Panel2.Controls.Add(this.btnRemove);
             this.splitContainer.Panel2.Controls.Add(this.flowLayoutPanel1);
+            this.splitContainer.Panel2.Controls.Add(this.btnSearch);
             this.splitContainer.Panel2.Controls.Add(this.grdResults);
             this.splitContainer.Size = new System.Drawing.Size(734, 452);
-            this.splitContainer.SplitterDistance = 84;
+            this.splitContainer.SplitterDistance = 78;
             this.splitContainer.TabIndex = 6;
             // 
             // grdTravels
@@ -203,12 +208,59 @@
             this.grdTravels.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
             this.grdTravels.GridColor = System.Drawing.SystemColors.Control;
             this.grdTravels.Location = new System.Drawing.Point(0, 0);
+            this.grdTravels.MultiSelect = false;
             this.grdTravels.Name = "grdTravels";
             this.grdTravels.ReadOnly = true;
             this.grdTravels.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.grdTravels.Size = new System.Drawing.Size(734, 84);
+            this.grdTravels.Size = new System.Drawing.Size(732, 76);
             this.grdTravels.TabIndex = 3;
-            this.grdTravels.RowsAdded += new System.Windows.Forms.DataGridViewRowsAddedEventHandler(this.grdTravels_RowsAdded);
+            this.grdTravels.RowsAdded += new System.Windows.Forms.DataGridViewRowsAddedEventHandler(this.grdTravels_RowsChanged);
+            this.grdTravels.SelectionChanged += new System.EventHandler(this.grdTravels_SelectionChanged);
+            // 
+            // btnRemove
+            // 
+            this.btnRemove.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.btnRemove.Enabled = false;
+            this.btnRemove.Location = new System.Drawing.Point(347, 3);
+            this.btnRemove.Name = "btnRemove";
+            this.btnRemove.Size = new System.Drawing.Size(75, 23);
+            this.btnRemove.TabIndex = 21;
+            this.btnRemove.Text = "Töröl";
+            this.btnRemove.UseVisualStyleBackColor = true;
+            this.btnRemove.Click += new System.EventHandler(this.btnRemove_Click);
+            // 
+            // flowLayoutPanel1
+            // 
+            this.flowLayoutPanel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.flowLayoutPanel1.Controls.Add(this.dvSelected);
+            this.flowLayoutPanel1.Location = new System.Drawing.Point(347, 29);
+            this.flowLayoutPanel1.Name = "flowLayoutPanel1";
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(382, 336);
+            this.flowLayoutPanel1.TabIndex = 3;
+            this.flowLayoutPanel1.Resize += new System.EventHandler(this.flowLayoutPanel1_Resize);
+            // 
+            // dvSelected
+            // 
+            this.dvSelected.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dvSelected.Location = new System.Drawing.Point(3, 3);
+            this.dvSelected.Name = "dvSelected";
+            this.dvSelected.Size = new System.Drawing.Size(400, 151);
+            this.dvSelected.TabIndex = 4;
+            // 
+            // btnSearch
+            // 
+            this.btnSearch.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnSearch.Enabled = false;
+            this.btnSearch.Location = new System.Drawing.Point(656, 3);
+            this.btnSearch.Name = "btnSearch";
+            this.btnSearch.Size = new System.Drawing.Size(75, 23);
+            this.btnSearch.TabIndex = 20;
+            this.btnSearch.Text = "Keres";
+            this.btnSearch.UseVisualStyleBackColor = true;
+            this.btnSearch.Click += new System.EventHandler(this.btnSearch_Click);
             // 
             // grdResults
             // 
@@ -227,14 +279,13 @@
             this.grdResults.Name = "grdResults";
             this.grdResults.ReadOnly = true;
             this.grdResults.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.grdResults.Size = new System.Drawing.Size(220, 364);
+            this.grdResults.Size = new System.Drawing.Size(344, 368);
             this.grdResults.TabIndex = 2;
             this.grdResults.SelectionChanged += new System.EventHandler(this.grdResults_SelectionChanged);
             // 
             // panel1
             // 
             this.panel1.Controls.Add(this.cbIsRet);
-            this.panel1.Controls.Add(this.btnSearch);
             this.panel1.Controls.Add(this.label8);
             this.panel1.Controls.Add(this.spInfant);
             this.panel1.Controls.Add(this.label7);
@@ -268,16 +319,6 @@
             this.cbIsRet.Text = "Oda-Vissza";
             this.cbIsRet.UseVisualStyleBackColor = true;
             this.cbIsRet.CheckedChanged += new System.EventHandler(this.cbIsRet_CheckedChanged);
-            // 
-            // btnSearch
-            // 
-            this.btnSearch.Location = new System.Drawing.Point(510, 55);
-            this.btnSearch.Name = "btnSearch";
-            this.btnSearch.Size = new System.Drawing.Size(75, 23);
-            this.btnSearch.TabIndex = 9;
-            this.btnSearch.Text = "Keres";
-            this.btnSearch.UseVisualStyleBackColor = true;
-            this.btnSearch.Click += new System.EventHandler(this.btnSearch_Click);
             // 
             // label8
             // 
@@ -418,26 +459,6 @@
             this.label1.TabIndex = 0;
             this.label1.Text = "Honnan";
             // 
-            // flowLayoutPanel1
-            // 
-            this.flowLayoutPanel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.flowLayoutPanel1.Controls.Add(this.dvSelected);
-            this.flowLayoutPanel1.Location = new System.Drawing.Point(227, 4);
-            this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(504, 357);
-            this.flowLayoutPanel1.TabIndex = 3;
-            // 
-            // dvSelected
-            // 
-            this.dvSelected.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.dvSelected.Location = new System.Drawing.Point(3, 3);
-            this.dvSelected.Name = "dvSelected";
-            this.dvSelected.Size = new System.Drawing.Size(501, 151);
-            this.dvSelected.TabIndex = 4;
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -459,13 +480,13 @@
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer)).EndInit();
             this.splitContainer.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.grdTravels)).EndInit();
+            this.flowLayoutPanel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.grdResults)).EndInit();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.spInfant)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.spChild)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.spAdult)).EndInit();
-            this.flowLayoutPanel1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -496,7 +517,6 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.DateTimePicker dtRet;
-        private System.Windows.Forms.Button btnSearch;
         private System.Windows.Forms.TextBox tbTo;
         private System.Windows.Forms.TextBox tbFrom;
         private System.Windows.Forms.Button btnAdd;
@@ -508,6 +528,8 @@
         private System.Windows.Forms.DataGridView grdResults;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
         private DetailView dvSelected;
+        private System.Windows.Forms.Button btnRemove;
+        private System.Windows.Forms.Button btnSearch;
     }
 }
 

@@ -33,29 +33,46 @@ namespace PlaneTicketAdvisorCS
             dtDep.MinDate = DateTime.Today;
             dtRet.Value = DateTime.Today.AddDays(9);
 
-            //grdTravels.AutoGenerateColumns = false;
-            //grdResults.AutoGenerateColumns = false;
-            grdTravels.Columns.AddRange(new[]
-                {
-                    new DataGridViewColumn{DataPropertyName = "From", HeaderText = Resources.Form1_Form1_Load_From, CellTemplate = new DataGridViewTextBoxCell()},
-                    new DataGridViewColumn{DataPropertyName = "To", HeaderText = Resources.Form1_Form1_Load_To, CellTemplate = new DataGridViewTextBoxCell()}, 
-                    new DataGridViewColumn{DataPropertyName = "Date", HeaderText = Resources.Form1_Form1_Load_Date, CellTemplate = new DataGridViewTextBoxCell()},
-                    new DataGridViewColumn{DataPropertyName = "Adults", HeaderText = Resources.Form1_Form1_Load_Adults, CellTemplate = new DataGridViewTextBoxCell()},
-                    new DataGridViewColumn{DataPropertyName = "Children", HeaderText = Resources.Form1_Form1_Load_Children, CellTemplate = new DataGridViewTextBoxCell()},
-                    new DataGridViewColumn{DataPropertyName = "Infants", HeaderText = Resources.Form1_Form1_Load_Infants, CellTemplate = new DataGridViewTextBoxCell()}
-                });
+            grdTravels.AutoGenerateColumns = false;
+            grdTravels.ColumnHeadersVisible = true;
+            grdTravels.DefaultCellStyle = new DataGridViewCellStyle();
+            grdTravels.ColumnCount = 6;
 
-            grdResults.Columns.Clear();
-            grdResults.Columns.AddRange(new[]
-                {
-                    new DataGridViewColumn{DataPropertyName = "TicketCount", HeaderText = Resources.Form1_Form1_Load_TicketCount}, 
-                    new DataGridViewColumn{DataPropertyName = "SumPrice", HeaderText = Resources.Form1_Form1_Load_Price}, 
-                    new DataGridViewColumn{DataPropertyName = "EngineName", HeaderText = Resources.Form1_Form1_Load_SearchEngineName}
-                });
-            grdResults.DataSource = ResultSets;
+            grdTravels.Columns[0].DataPropertyName = "From";
+            grdTravels.Columns[0].HeaderText = Resources.Form1_Form1_Load_From;
+            grdTravels.Columns[1].DataPropertyName = "To";
+            grdTravels.Columns[1].HeaderText = Resources.Form1_Form1_Load_To;
+            grdTravels.Columns[2].DataPropertyName = "Date";
+            grdTravels.Columns[2].HeaderText = Resources.Form1_Form1_Load_Date;
+            grdTravels.Columns[3].DataPropertyName = "Adults";
+            grdTravels.Columns[3].HeaderText = Resources.Form1_Form1_Load_Adults;
+            grdTravels.Columns[4].DataPropertyName = "Children";
+            grdTravels.Columns[4].HeaderText = Resources.Form1_Form1_Load_Children;
+            grdTravels.Columns[5].DataPropertyName = "Infants";
+            grdTravels.Columns[5].HeaderText = Resources.Form1_Form1_Load_Infants;
+            
+            grdResults.AutoGenerateColumns = false;
+            grdResults.ColumnHeadersVisible = true;
+            grdResults.DefaultCellStyle = new DataGridViewCellStyle();
+            grdResults.ColumnCount = 5;
 
-            AppDomain currentDomain = AppDomain.CurrentDomain;
+            grdResults.Columns[0].DataPropertyName = "TicketCount";
+            grdResults.Columns[0].HeaderText = Resources.Form1_Form1_Load_TicketCount;
+            grdResults.Columns[1].DataPropertyName = "SumPrice";
+            grdResults.Columns[1].HeaderText = Resources.Form1_Form1_Load_Price;
+            grdResults.Columns[2].DataPropertyName = "SumStops";
+            grdResults.Columns[2].HeaderText = Resources.Form1_Form1_Load_Stops;
+            grdResults.Columns[3].DataPropertyName = "SumTravelTime";
+            grdResults.Columns[3].HeaderText = Resources.Form1_Form1_Load_TravelTime;
+            grdResults.Columns[4].DataPropertyName = "EngineName";
+            grdResults.Columns[4].HeaderText = Resources.Form1_Form1_Load_SearchEngineName;
+
+            //grdResults.DataSource = ResultSets;
+
+            var currentDomain = AppDomain.CurrentDomain;
             currentDomain.UnhandledException += MyHandler;
+            grdResults.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.Fill);
+            grdTravels.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.Fill);
         }
 
         static void MyHandler(object sender, UnhandledExceptionEventArgs args)
@@ -89,14 +106,21 @@ namespace PlaneTicketAdvisorCS
 
         private void btnSearch_Click(object sender, EventArgs e)
         {
-            statusLabel.Text = Resources.Form1_btnSearch_Click_Searching;
-            progressBar.Step = 1; 
-            
-            _travelSearchManager.StartSearch();
-            
-            var resultCheck = new Timer {Interval = 1000};
-            resultCheck.Tick += resultCheck_Tick;
-            resultCheck.Start();
+            if (_travelSearchManager.IsSearchInProgress)
+            {
+                _travelSearchManager.CancelSearch();
+            }
+            else
+            {
+                statusLabel.Text = Resources.Form1_btnSearch_Click_Searching;
+                progressBar.Step = 1;
+
+                _travelSearchManager.StartSearch();
+
+                var resultCheck = new Timer {Interval = 1000};
+                resultCheck.Tick += resultCheck_Tick;
+                resultCheck.Start();
+            }
         }
 
         protected readonly List<ResultSet> ResultSets = new List<ResultSet>();
@@ -110,14 +134,8 @@ namespace PlaneTicketAdvisorCS
             //listView1.Clear();
             if(grdResults.RowCount == results.Count) return;
             ResultSets.Clear();
-            ResultSets.AddRange(
-                results.Select(
-                    a =>
-                    new ResultSet
-                        {
-                            EngineName = "liligo.hu",
-                            Tickets = a.ToArray()
-                        }));
+            ResultSets.AddRange(results);
+            grdResults.DataSource = null;
             grdResults.DataSource = ResultSets;
             grdResults.Refresh();
         }
@@ -141,10 +159,6 @@ namespace PlaneTicketAdvisorCS
             dtRet.MinDate = dtDep.Value;
         }
 
-        private void grdTravels_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)
-        {
-        }
-
         private void runtestToolStripMenuItem_Click(object sender, EventArgs e)
         {
             _liligo.TestImageExp();
@@ -157,6 +171,31 @@ namespace PlaneTicketAdvisorCS
             {
                 dvSelected.SetTicket((ResultSet)grdResults.SelectedRows[0].DataBoundItem);
                 dvSelected.Visible = true;
+            }
+        }
+
+        private void btnRemove_Click(object sender, EventArgs e)
+        {
+            if(grdTravels.SelectedRows.Count!=1) return;
+            _travelSearchManager.RemoveTravel(grdTravels.SelectedRows[0].Index);
+            grdTravels.DataSource = _travelSearchManager.FlightList;
+        }
+
+        private void grdTravels_SelectionChanged(object sender, EventArgs e)
+        {
+            btnRemove.Enabled = grdTravels.SelectedRows.Count == 1;
+        }
+
+        private void grdTravels_RowsChanged(object sender, EventArgs e)
+        {
+            btnSearch.Enabled = grdTravels.RowCount > 0;
+        }
+
+        private void flowLayoutPanel1_Resize(object sender, EventArgs e)
+        {
+            foreach (var ctrl in flowLayoutPanel1.Controls)
+            {
+                ((DetailView) ctrl).Width = flowLayoutPanel1.Width - 5;
             }
         }
 
