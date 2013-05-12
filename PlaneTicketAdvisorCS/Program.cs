@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Windows.Forms;
 
-namespace PlaneTicketAdvisorCS
+namespace TicketAdvisor
 {
     static class Program
     {
@@ -15,7 +13,7 @@ namespace PlaneTicketAdvisorCS
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            var frm = new Form1();
+            var frm = new MainForm();
             Application.Run(frm);
         }  
     }

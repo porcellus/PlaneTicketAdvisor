@@ -1,4 +1,4 @@
-﻿namespace PlaneTicketAdvisorCS
+﻿namespace TicketAdvisor
 {
     partial class DetailView
     {
@@ -110,13 +110,16 @@
             // 
             // grdTickets
             // 
+            this.grdTickets.AllowUserToDeleteRows = false;
             this.grdTickets.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.grdTickets.BackgroundColor = System.Drawing.SystemColors.Control;
             this.grdTickets.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.grdTickets.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.grdTickets.Location = new System.Drawing.Point(0, 49);
             this.grdTickets.MultiSelect = false;
             this.grdTickets.Name = "grdTickets";
             this.grdTickets.ReadOnly = true;
+            this.grdTickets.RowHeadersVisible = false;
             this.grdTickets.Size = new System.Drawing.Size(434, 102);
             this.grdTickets.TabIndex = 8;
             // 

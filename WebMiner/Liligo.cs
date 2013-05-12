@@ -11,13 +11,16 @@ namespace WebMiner
 {
     public class Liligo: ITravelSearchEngine
     {
+        #region Fields
         private int _activeSearches = 0;
         private const int MaxSearchCount = 5;
         private const int SearchDelay = 3000;
-        private readonly Queue<Search> _searchList = new Queue<Search>();
-        private readonly Dictionary<Search, Thread> _searchThreads = new Dictionary<Search, Thread>();
+
+        private readonly ConcurrentQueue<Search> _searchQueue = new ConcurrentQueue<Search>();
+        private readonly ConcurrentDictionary<Search, Thread> _searchThreads = new ConcurrentDictionary<Search, Thread>();
         private readonly ConcurrentDictionary<Search, Ticket[]> _searchResults = new ConcurrentDictionary<Search, Ticket[]>();
         private readonly ConcurrentDictionary<Search, int> _searchProgresses = new ConcurrentDictionary<Search, int>();
+        #endregion
 
         #region ITravelSearchEngine
         public void Initialize()
@@ -26,19 +29,18 @@ namespace WebMiner
 
         public void StartSearches()
         {
-            if (_activeSearches > 0)
-            {
-                CancelSearches();
-            }
-
             new Task(delegate
                 {
-                    while(_activeSearches < MaxSearchCount && _searchList.Count > 0)
+                    while(_activeSearches < MaxSearchCount && _searchQueue.Count > 0)
                     {
-                        var search = _searchList.Dequeue();
-                        _searchProgresses[search] = 0;
+                        Search search;
+                        while(!_searchQueue.TryDequeue(out search)) Thread.Sleep(10);
 
-                        _searchThreads.Add(search, new Thread(StartSearchThread));
+                        _searchProgresses[search] = 0;
+                        _searchResults[search] = new Ticket[0];
+
+                        _searchThreads.TryAdd(search, new Thread(StartSearchThread)); //ha már hozzá van adva az bug..
+                       
                         _searchThreads[search].IsBackground = true;
                         _searchThreads[search].Start(search);
 
@@ -48,43 +50,39 @@ namespace WebMiner
                 }).Start();
         }
 
-        private void StartSearchThread(object obj)
-        {
-            StartSearch(obj as Search);
-        }
-
         public void CancelSearches()
         {
-            _searchList.Clear();
+            ClearSearches();
+            _searchProgresses.Clear();
             _activeSearches = 0;
             while(_searchThreads.Count>0)
             {
-                var thread = _searchThreads.First();
-                thread.Value.Abort();
-                _searchThreads.Remove(thread.Key);
+                Thread tmpThread;
+                if(_searchThreads.TryRemove(_searchThreads.First().Key, out tmpThread))
+                    tmpThread.Abort();
             }
         }
 
         public void AddSearch(Search nSearch)
         {
-            _searchList.Enqueue(nSearch);
+            _searchQueue.Enqueue(nSearch);
         }
 
         public void ClearSearches()
         {
-            if(_activeSearches>0) return;
-            _searchList.Clear();
+            Search tmpSearch;
+            while (_searchQueue.Count > 0) _searchQueue.TryDequeue(out tmpSearch);
         }
 
         public double GetProgressPercent()
         {
             if (_searchProgresses.Count == 0) return 100;
-            return _searchProgresses.Sum(a => a.Value) * 1.25 / (_searchList.Count + _searchProgresses.Count);
+            return _searchProgresses.Sum(a => a.Value) * 1.25 / (_searchQueue.Count + _searchProgresses.Count);
         }
 
-        public IDictionary<Search, ResultSet> GetResults()
+        public IDictionary<Search, Ticket[]> GetResults()
         {
-            return (IDictionary<Search, ResultSet>)_searchResults ?? new Dictionary<Search, ResultSet>();
+            return (IDictionary<Search, Ticket[]>)_searchResults ?? new Dictionary<Search, Ticket[]>();
         }
 
         public void Dispose()
@@ -95,6 +93,12 @@ namespace WebMiner
         #endregion
 
         #region Individual Search
+
+        private void StartSearchThread(object obj)
+        {
+            StartSearch(obj as Search);
+        }
+
         private void StartSearch(Search searchInp)
         {
             var browser = new BrowserSimulator("http://liligo.hu");
@@ -143,8 +147,13 @@ namespace WebMiner
             browser.ClickElementPersistent("air-submit");
             browser.ClickElementPersistent("air-submit");
             ((Awesomium.Core.BitmapSurface)browser.Surface).SaveToJPEG(searchInp.From + "-" + searchInp.To + "-after-click.jpg");
+            ResultCheckLoop(searchInp, browser);
+        }
+
+        private void ResultCheckLoop(Search searchInp, BrowserSimulator browser)
+        {
             while (
-                !(browser.IsDocumentReady && browser.Source.AbsoluteUri == "http://www.liligo.hu/air/SearchFlights.jsp"))
+                   !(browser.IsDocumentReady && browser.Source.AbsoluteUri == "http://www.liligo.hu/air/SearchFlights.jsp"))
             {
                 Thread.Sleep(100);
             }
@@ -170,8 +179,10 @@ namespace WebMiner
                 }
                 else if (_searchProgresses[searchInp] < 79) _searchProgresses[searchInp]++;
             }
-            _searchThreads.Remove(searchInp);
-            if(_searchList.Count > 0) StartSearches();
+            Thread ignored;
+            _searchThreads.TryRemove(searchInp, out ignored);
+            if (_searchQueue.Count > 0) StartSearches();
+            
         }
 
         static void browser_DocumentReady(object sender, Awesomium.Core.WebViewEventArgs e)

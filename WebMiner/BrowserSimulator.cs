@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Globalization;
 using System.Threading;
-using System.Threading.Tasks;
-using System.Windows.Threading;
 using Awesomium.Core;
 
 namespace WebMiner
@@ -111,7 +109,6 @@ namespace WebMiner
                 {
                     Thread.Sleep(100);
                 }
-
             }
         }
 

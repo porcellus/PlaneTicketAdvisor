@@ -124,6 +124,24 @@ namespace PlaneTicketAdvisorCS.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Kereső neve:.
+        /// </summary>
+        internal static string DetailView_DetailView_EngineName {
+            get {
+                return ResourceManager.GetString("DetailView_DetailView_EngineName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Kereső neve:.
+        /// </summary>
+        internal static string DetailView_DetailView_Kereső_neve_ {
+            get {
+                return ResourceManager.GetString("DetailView_DetailView_Kereső_neve_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Érkezési állomás (oda).
         /// </summary>
         internal static string DetailView_DetailView_OutArriveStation {
@@ -205,6 +223,15 @@ namespace PlaneTicketAdvisorCS.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Ár.
+        /// </summary>
+        internal static string DetailView_DetailView_Price {
+            get {
+                return ResourceManager.GetString("DetailView_DetailView_Price", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cég (vissza).
         /// </summary>
         internal static string DetailView_DetailView_RetCompany {
@@ -214,38 +241,47 @@ namespace PlaneTicketAdvisorCS.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Átszállások:.
+        /// </summary>
+        internal static string DetailView_DetailView_Stops {
+            get {
+                return ResourceManager.GetString("DetailView_DetailView_Stops", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Összár:.
+        /// </summary>
+        internal static string DetailView_DetailView_SumPrice {
+            get {
+                return ResourceManager.GetString("DetailView_DetailView_SumPrice", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Jegyek száma:.
+        /// </summary>
+        internal static string DetailView_DetailView_TicketCount {
+            get {
+                return ResourceManager.GetString("DetailView_DetailView_TicketCount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Útidő.
+        /// </summary>
+        internal static string DetailView_DetailView_TravelTime {
+            get {
+                return ResourceManager.GetString("DetailView_DetailView_TravelTime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Utazási idő (oda).
         /// </summary>
         internal static string DetailView_DetailView_TravelTimeOut {
             get {
                 return ResourceManager.GetString("DetailView_DetailView_TravelTimeOut", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Keresés....
-        /// </summary>
-        internal static string Form1_btnSearch_Click_Searching {
-            get {
-                return ResourceManager.GetString("Form1_btnSearch_Click_Searching", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Leállít.
-        /// </summary>
-        internal static string Form1_btnSearch_Click_Stop {
-            get {
-                return ResourceManager.GetString("Form1_btnSearch_Click_Stop", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Felnőttek.
-        /// </summary>
-        internal static string Form1_Form1_Load_Adults {
-            get {
-                return ResourceManager.GetString("Form1_Form1_Load_Adults", resourceCulture);
             }
         }
         
@@ -268,24 +304,6 @@ namespace PlaneTicketAdvisorCS.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Dátum.
-        /// </summary>
-        internal static string Form1_Form1_Load_Date {
-            get {
-                return ResourceManager.GetString("Form1_Form1_Load_Date", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Honnan.
-        /// </summary>
-        internal static string Form1_Form1_Load_From {
-            get {
-                return ResourceManager.GetString("Form1_Form1_Load_From", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Csecsemők.
         /// </summary>
         internal static string Form1_Form1_Load_Infants {
@@ -304,69 +322,6 @@ namespace PlaneTicketAdvisorCS.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Ár.
-        /// </summary>
-        internal static string Form1_Form1_Load_Price {
-            get {
-                return ResourceManager.GetString("Form1_Form1_Load_Price", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Kereső.
-        /// </summary>
-        internal static string Form1_Form1_Load_SearchEngineName {
-            get {
-                return ResourceManager.GetString("Form1_Form1_Load_SearchEngineName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Átszállások.
-        /// </summary>
-        internal static string Form1_Form1_Load_Stops {
-            get {
-                return ResourceManager.GetString("Form1_Form1_Load_Stops", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Jegyek.
-        /// </summary>
-        internal static string Form1_Form1_Load_TicketCount {
-            get {
-                return ResourceManager.GetString("Form1_Form1_Load_TicketCount", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Hova.
-        /// </summary>
-        internal static string Form1_Form1_Load_To {
-            get {
-                return ResourceManager.GetString("Form1_Form1_Load_To", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Útidő.
-        /// </summary>
-        internal static string Form1_Form1_Load_TravelTime {
-            get {
-                return ResourceManager.GetString("Form1_Form1_Load_TravelTime", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Kész.
-        /// </summary>
-        internal static string Form1_resultCheck_Tick_Done {
-            get {
-                return ResourceManager.GetString("Form1_resultCheck_Tick_Done", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Kész.
         /// </summary>
         internal static string Form1_resultCheck_Tick_Kész {
@@ -376,20 +331,227 @@ namespace PlaneTicketAdvisorCS.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Keres.
-        /// </summary>
-        internal static string Form1_resultCheck_Tick_Search {
-            get {
-                return ResourceManager.GetString("Form1_resultCheck_Tick_Search", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Leállítva.
         /// </summary>
         internal static string Form1_resultCheck_Tick_Stopped {
             get {
                 return ResourceManager.GetString("Form1_resultCheck_Tick_Stopped", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Keresés....
+        /// </summary>
+        internal static string MainForm_btnSearch_Click_Searching {
+            get {
+                return ResourceManager.GetString("MainForm_btnSearch_Click_Searching", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Leállít.
+        /// </summary>
+        internal static string MainForm_btnSearch_Click_Stop {
+            get {
+                return ResourceManager.GetString("MainForm_btnSearch_Click_Stop", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hozzáad.
+        /// </summary>
+        internal static string MainForm_MainForm_Load_Add {
+            get {
+                return ResourceManager.GetString("MainForm_MainForm_Load_Add", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Felnőtt.
+        /// </summary>
+        internal static string MainForm_MainForm_Load_Adult {
+            get {
+                return ResourceManager.GetString("MainForm_MainForm_Load_Adult", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Felnőttek.
+        /// </summary>
+        internal static string MainForm_MainForm_Load_Adults {
+            get {
+                return ResourceManager.GetString("MainForm_MainForm_Load_Adults", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to TicketAdvisor.
+        /// </summary>
+        internal static string MainForm_MainForm_Load_AppName {
+            get {
+                return ResourceManager.GetString("MainForm_MainForm_Load_AppName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Vissza.
+        /// </summary>
+        internal static string MainForm_MainForm_Load_BackDate {
+            get {
+                return ResourceManager.GetString("MainForm_MainForm_Load_BackDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Gyerek.
+        /// </summary>
+        internal static string MainForm_MainForm_Load_Children {
+            get {
+                return ResourceManager.GetString("MainForm_MainForm_Load_Children", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Dátum.
+        /// </summary>
+        internal static string MainForm_MainForm_Load_Date {
+            get {
+                return ResourceManager.GetString("MainForm_MainForm_Load_Date", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Töröl.
+        /// </summary>
+        internal static string MainForm_MainForm_Load_Delete {
+            get {
+                return ResourceManager.GetString("MainForm_MainForm_Load_Delete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Honnan.
+        /// </summary>
+        internal static string MainForm_MainForm_Load_From {
+            get {
+                return ResourceManager.GetString("MainForm_MainForm_Load_From", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Csecsemő.
+        /// </summary>
+        internal static string MainForm_MainForm_Load_Infants {
+            get {
+                return ResourceManager.GetString("MainForm_MainForm_Load_Infants", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Oda-Vissza.
+        /// </summary>
+        internal static string MainForm_MainForm_Load_IsReturn {
+            get {
+                return ResourceManager.GetString("MainForm_MainForm_Load_IsReturn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Utasok:.
+        /// </summary>
+        internal static string MainForm_MainForm_Load_Passangers {
+            get {
+                return ResourceManager.GetString("MainForm_MainForm_Load_Passangers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ár.
+        /// </summary>
+        internal static string MainForm_MainForm_Load_Price {
+            get {
+                return ResourceManager.GetString("MainForm_MainForm_Load_Price", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Keres.
+        /// </summary>
+        internal static string MainForm_MainForm_Load_Search {
+            get {
+                return ResourceManager.GetString("MainForm_MainForm_Load_Search", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Kereső.
+        /// </summary>
+        internal static string MainForm_MainForm_Load_SearchEngineName {
+            get {
+                return ResourceManager.GetString("MainForm_MainForm_Load_SearchEngineName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Átszállások.
+        /// </summary>
+        internal static string MainForm_MainForm_Load_Stops {
+            get {
+                return ResourceManager.GetString("MainForm_MainForm_Load_Stops", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Jegyek.
+        /// </summary>
+        internal static string MainForm_MainForm_Load_TicketCount {
+            get {
+                return ResourceManager.GetString("MainForm_MainForm_Load_TicketCount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hova.
+        /// </summary>
+        internal static string MainForm_MainForm_Load_To {
+            get {
+                return ResourceManager.GetString("MainForm_MainForm_Load_To", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Oda.
+        /// </summary>
+        internal static string MainForm_MainForm_Load_ToDate {
+            get {
+                return ResourceManager.GetString("MainForm_MainForm_Load_ToDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Útidő.
+        /// </summary>
+        internal static string MainForm_MainForm_Load_TravelTime {
+            get {
+                return ResourceManager.GetString("MainForm_MainForm_Load_TravelTime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Kész.
+        /// </summary>
+        internal static string MainForm_resultCheck_Tick_Done {
+            get {
+                return ResourceManager.GetString("MainForm_resultCheck_Tick_Done", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Keres.
+        /// </summary>
+        internal static string MainForm_resultCheck_Tick_Search {
+            get {
+                return ResourceManager.GetString("MainForm_resultCheck_Tick_Search", resourceCulture);
             }
         }
     }

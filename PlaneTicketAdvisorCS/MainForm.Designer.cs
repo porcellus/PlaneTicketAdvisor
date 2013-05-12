@@ -1,6 +1,6 @@
-﻿namespace PlaneTicketAdvisorCS
+﻿namespace TicketAdvisor
 {
-    partial class Form1
+    partial class MainForm
     {
         /// <summary>
         /// Required designer variable.
@@ -35,11 +35,11 @@
             this.statusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.splitContainer = new System.Windows.Forms.SplitContainer();
             this.grdTravels = new System.Windows.Forms.DataGridView();
-            this.btnRemove = new System.Windows.Forms.Button();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
-            this.dvSelected = new PlaneTicketAdvisorCS.DetailView();
-            this.btnSearch = new System.Windows.Forms.Button();
+            this.dvSelected = new TicketAdvisor.DetailView();
             this.grdResults = new System.Windows.Forms.DataGridView();
+            this.btnRemove = new System.Windows.Forms.Button();
+            this.btnSearch = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
             this.cbIsRet = new System.Windows.Forms.CheckBox();
             this.label8 = new System.Windows.Forms.Label();
@@ -127,38 +127,25 @@
             // 
             // grdTravels
             // 
-            this.grdTravels.AllowUserToAddRows = false;
             this.grdTravels.AllowUserToDeleteRows = false;
             this.grdTravels.AllowUserToResizeRows = false;
             this.grdTravels.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            this.grdTravels.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllHeaders;
+            this.grdTravels.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
             this.grdTravels.BackgroundColor = System.Drawing.SystemColors.Control;
             this.grdTravels.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.grdTravels.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.grdTravels.Dock = System.Windows.Forms.DockStyle.Fill;
             this.grdTravels.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
-            this.grdTravels.GridColor = System.Drawing.SystemColors.Control;
             this.grdTravels.Location = new System.Drawing.Point(0, 0);
             this.grdTravels.MultiSelect = false;
             this.grdTravels.Name = "grdTravels";
             this.grdTravels.ReadOnly = true;
+            this.grdTravels.RowHeadersVisible = false;
             this.grdTravels.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.grdTravels.Size = new System.Drawing.Size(732, 76);
             this.grdTravels.TabIndex = 3;
             this.grdTravels.RowsAdded += new System.Windows.Forms.DataGridViewRowsAddedEventHandler(this.grdTravels_RowsChanged);
             this.grdTravels.SelectionChanged += new System.EventHandler(this.grdTravels_SelectionChanged);
-            // 
-            // btnRemove
-            // 
-            this.btnRemove.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.btnRemove.Enabled = false;
-            this.btnRemove.Location = new System.Drawing.Point(87, 90);
-            this.btnRemove.Name = "btnRemove";
-            this.btnRemove.Size = new System.Drawing.Size(75, 23);
-            this.btnRemove.TabIndex = 21;
-            this.btnRemove.Text = "Töröl";
-            this.btnRemove.UseVisualStyleBackColor = true;
-            this.btnRemove.Click += new System.EventHandler(this.btnRemove_Click);
             // 
             // flowLayoutPanel1
             // 
@@ -181,6 +168,38 @@
             this.dvSelected.Size = new System.Drawing.Size(400, 154);
             this.dvSelected.TabIndex = 4;
             // 
+            // grdResults
+            // 
+            this.grdResults.AllowUserToDeleteRows = false;
+            this.grdResults.AllowUserToResizeRows = false;
+            this.grdResults.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.grdResults.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCellsExceptHeaders;
+            this.grdResults.BackgroundColor = System.Drawing.SystemColors.Control;
+            this.grdResults.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.grdResults.Dock = System.Windows.Forms.DockStyle.Left;
+            this.grdResults.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
+            this.grdResults.Location = new System.Drawing.Point(0, 0);
+            this.grdResults.MultiSelect = false;
+            this.grdResults.Name = "grdResults";
+            this.grdResults.ReadOnly = true;
+            this.grdResults.RowHeadersVisible = false;
+            this.grdResults.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.grdResults.Size = new System.Drawing.Size(344, 368);
+            this.grdResults.TabIndex = 2;
+            this.grdResults.SelectionChanged += new System.EventHandler(this.grdResults_SelectionChanged);
+            // 
+            // btnRemove
+            // 
+            this.btnRemove.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.btnRemove.Enabled = false;
+            this.btnRemove.Location = new System.Drawing.Point(87, 90);
+            this.btnRemove.Name = "btnRemove";
+            this.btnRemove.Size = new System.Drawing.Size(75, 23);
+            this.btnRemove.TabIndex = 21;
+            this.btnRemove.Text = "Töröl";
+            this.btnRemove.UseVisualStyleBackColor = true;
+            this.btnRemove.Click += new System.EventHandler(this.btnRemove_Click);
+            // 
             // btnSearch
             // 
             this.btnSearch.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
@@ -192,27 +211,6 @@
             this.btnSearch.Text = "Keres";
             this.btnSearch.UseVisualStyleBackColor = true;
             this.btnSearch.Click += new System.EventHandler(this.btnSearch_Click);
-            // 
-            // grdResults
-            // 
-            this.grdResults.AllowUserToAddRows = false;
-            this.grdResults.AllowUserToDeleteRows = false;
-            this.grdResults.AllowUserToResizeRows = false;
-            this.grdResults.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            this.grdResults.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCellsExceptHeaders;
-            this.grdResults.BackgroundColor = System.Drawing.SystemColors.Control;
-            this.grdResults.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.grdResults.Dock = System.Windows.Forms.DockStyle.Left;
-            this.grdResults.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
-            this.grdResults.GridColor = System.Drawing.SystemColors.Control;
-            this.grdResults.Location = new System.Drawing.Point(0, 0);
-            this.grdResults.MultiSelect = false;
-            this.grdResults.Name = "grdResults";
-            this.grdResults.ReadOnly = true;
-            this.grdResults.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.grdResults.Size = new System.Drawing.Size(344, 368);
-            this.grdResults.TabIndex = 2;
-            this.grdResults.SelectionChanged += new System.EventHandler(this.grdResults_SelectionChanged);
             // 
             // panel1
             // 
@@ -397,7 +395,7 @@
             this.label1.TabIndex = 0;
             this.label1.Text = "Honnan";
             // 
-            // Form1
+            // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -405,9 +403,9 @@
             this.Controls.Add(this.splitContainer);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.statusStrip1);
-            this.Name = "Form1";
-            this.Text = "Form1";
-            this.Load += new System.EventHandler(this.Form1_Load);
+            this.Name = "MainForm";
+            this.Text = "TicketAdvisor";
+            this.Load += new System.EventHandler(this.MainForm_Load);
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
             this.splitContainer.Panel1.ResumeLayout(false);

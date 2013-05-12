@@ -121,10 +121,10 @@
     <value>Kész</value>
     <comment>Done</comment>
   </data>
-  <data name="Form1_resultCheck_Tick_Done" xml:space="preserve">
+  <data name="MainForm_resultCheck_Tick_Done" xml:space="preserve">
     <value>Kész</value>
   </data>
-  <data name="Form1_btnSearch_Click_Searching" xml:space="preserve">
+  <data name="MainForm_btnSearch_Click_Searching" xml:space="preserve">
     <value>Keresés...</value>
     <comment>StatusLabel</comment>
   </data>
@@ -134,19 +134,19 @@
   <data name="Form1_Form1_Load_Children" xml:space="preserve">
     <value>Gyerekek</value>
   </data>
-  <data name="Form1_Form1_Load_Adults" xml:space="preserve">
+  <data name="MainForm_MainForm_Load_Adults" xml:space="preserve">
     <value>Felnőttek</value>
   </data>
-  <data name="Form1_Form1_Load_Date" xml:space="preserve">
+  <data name="MainForm_MainForm_Load_Date" xml:space="preserve">
     <value>Dátum</value>
   </data>
-  <data name="Form1_Form1_Load_To" xml:space="preserve">
+  <data name="MainForm_MainForm_Load_To" xml:space="preserve">
     <value>Hova</value>
   </data>
-  <data name="Form1_Form1_Load_From" xml:space="preserve">
+  <data name="MainForm_MainForm_Load_From" xml:space="preserve">
     <value>Honnan</value>
   </data>
-  <data name="Form1_Form1_Load_Price" xml:space="preserve">
+  <data name="MainForm_MainForm_Load_Price" xml:space="preserve">
     <value>Ár</value>
   </data>
   <data name="Form1_Form1_Load_OutDate" xml:space="preserve">
@@ -155,16 +155,16 @@
   <data name="Form1_Form1_Load_BackDate" xml:space="preserve">
     <value>Hazaút</value>
   </data>
-  <data name="Form1_Form1_Load_TicketCount" xml:space="preserve">
+  <data name="MainForm_MainForm_Load_TicketCount" xml:space="preserve">
     <value>Jegyek</value>
   </data>
-  <data name="Form1_Form1_Load_SearchEngineName" xml:space="preserve">
+  <data name="MainForm_MainForm_Load_SearchEngineName" xml:space="preserve">
     <value>Kereső</value>
   </data>
-  <data name="Form1_Form1_Load_Stops" xml:space="preserve">
+  <data name="MainForm_MainForm_Load_Stops" xml:space="preserve">
     <value>Átszállások</value>
   </data>
-  <data name="Form1_Form1_Load_TravelTime" xml:space="preserve">
+  <data name="MainForm_MainForm_Load_TravelTime" xml:space="preserve">
     <value>Útidő</value>
   </data>
   <data name="DetailView_DetailView_PerPrice" xml:space="preserve">
@@ -221,13 +221,70 @@
   <data name="DetailView_DetailView_OutCompany" xml:space="preserve">
     <value>Cég (oda)</value>
   </data>
-  <data name="Form1_btnSearch_Click_Stop" xml:space="preserve">
+  <data name="MainForm_btnSearch_Click_Stop" xml:space="preserve">
     <value>Leállít</value>
   </data>
-  <data name="Form1_resultCheck_Tick_Search" xml:space="preserve">
+  <data name="MainForm_resultCheck_Tick_Search" xml:space="preserve">
     <value>Keres</value>
   </data>
   <data name="Form1_resultCheck_Tick_Stopped" xml:space="preserve">
     <value>Leállítva</value>
+  </data>
+  <data name="DetailView_DetailView_Kereső_neve_" xml:space="preserve">
+    <value>Kereső neve:</value>
+  </data>
+  <data name="DetailView_DetailView_EngineName" xml:space="preserve">
+    <value>Kereső neve:</value>
+  </data>
+  <data name="DetailView_DetailView_TicketCount" xml:space="preserve">
+    <value>Jegyek száma:</value>
+  </data>
+  <data name="DetailView_DetailView_SumPrice" xml:space="preserve">
+    <value>Összár:</value>
+  </data>
+  <data name="DetailView_DetailView_Stops" xml:space="preserve">
+    <value>Átszállások:</value>
+  </data>
+  <data name="DetailView_DetailView_TravelTime" xml:space="preserve">
+    <value>Útidő</value>
+  </data>
+  <data name="DetailView_DetailView_Price" xml:space="preserve">
+    <value>Ár</value>
+  </data>
+  <data name="MainForm_MainForm_Load_AppName" xml:space="preserve">
+    <value>TicketAdvisor</value>
+  </data>
+  <data name="MainForm_MainForm_Load_From" xml:space="preserve">
+    <value>Honnan</value>
+  </data>
+  <data name="MainForm_MainForm_Load_ToDate" xml:space="preserve">
+    <value>Oda</value>
+  </data>
+  <data name="MainForm_MainForm_Load_Add" xml:space="preserve">
+    <value>Hozzáad</value>
+  </data>
+  <data name="MainForm_MainForm_Load_BackDate" xml:space="preserve">
+    <value>Vissza</value>
+  </data>
+  <data name="MainForm_MainForm_Load_Adult" xml:space="preserve">
+    <value>Felnőtt</value>
+  </data>
+  <data name="MainForm_MainForm_Load_Children" xml:space="preserve">
+    <value>Gyerek</value>
+  </data>
+  <data name="MainForm_MainForm_Load_Infants" xml:space="preserve">
+    <value>Csecsemő</value>
+  </data>
+  <data name="MainForm_MainForm_Load_Passangers" xml:space="preserve">
+    <value>Utasok:</value>
+  </data>
+  <data name="MainForm_MainForm_Load_IsReturn" xml:space="preserve">
+    <value>Oda-Vissza</value>
+  </data>
+  <data name="MainForm_MainForm_Load_Search" xml:space="preserve">
+    <value>Keres</value>
+  </data>
+  <data name="MainForm_MainForm_Load_Delete" xml:space="preserve">
+    <value>Töröl</value>
   </data>
 </root>

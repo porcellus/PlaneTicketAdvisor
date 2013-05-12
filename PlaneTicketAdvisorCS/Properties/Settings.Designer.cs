@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace PlaneTicketAdvisorCS.Properties
+namespace TicketAdvisor.Properties
 {
 
 

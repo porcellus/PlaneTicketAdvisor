@@ -1,26 +1,26 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Data;
 using System.Globalization;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using BusinessLogic;
 using PlaneTicketAdvisorCS.Properties;
 
-namespace PlaneTicketAdvisorCS
+namespace TicketAdvisor
 {
     public partial class DetailView : UserControl
     {
-        private ResultSet _resultSet = new ResultSet();
+        private ResultSet _resultSet;
         private readonly bool _isPinned;
 
         public DetailView(bool isPinned)
         {
             _isPinned = isPinned;
             InitializeComponent();
+            
+            label1.Text = Resources.DetailView_DetailView_EngineName;
+            label2.Text = Resources.DetailView_DetailView_TicketCount;
+            label3.Text = Resources.DetailView_DetailView_SumPrice;
+            label4.Text = Resources.DetailView_DetailView_Stops;
+            label5.Text = Resources.DetailView_DetailView_TravelTime;
 
             grdTickets.AutoGenerateColumns = false;
             grdTickets.ColumnHeadersVisible = true;
@@ -29,7 +29,7 @@ namespace PlaneTicketAdvisorCS
             grdTickets.ColumnCount = 18;
 
             grdTickets.Columns[0].DataPropertyName = "Price";
-            grdTickets.Columns[0].HeaderText = Resources.Form1_Form1_Load_Price;
+            grdTickets.Columns[0].HeaderText = Resources.DetailView_DetailView_Price;
 
             grdTickets.Columns[1].DataPropertyName = "Perprice";
             grdTickets.Columns[1].HeaderText = Resources.DetailView_DetailView_PerPrice;
@@ -98,19 +98,17 @@ namespace PlaneTicketAdvisorCS
             lSumStops.Text = resultSet.SumStops.ToString(CultureInfo.InvariantCulture);
             lSumTravelTime.Text = resultSet.SumTravelTime.ToString();
             grdTickets.DataSource = resultSet.Tickets;
+            btnPin.Enabled = true;
         }
 
         private void btnPin_Click(object sender, EventArgs e)
         {
-            if (_isPinned) this.Dispose();
+            if (_isPinned) Dispose();
             else
             {
                 if (Parent != null)
                 {
-                    var comp = new DetailView(true);
-                    comp.Anchor = Anchor;
-                    comp.Width = this.Width;
-                    comp.Height = this.Height;
+                    var comp = new DetailView(true) {Anchor = Anchor, Width = Width, Height = Height};
 
                     comp.SetTicket(_resultSet);
                     Parent.Controls.Add(comp);

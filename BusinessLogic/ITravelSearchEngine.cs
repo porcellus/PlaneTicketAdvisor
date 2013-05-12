@@ -226,7 +226,7 @@ namespace BusinessLogic
 
         public string EngineName
         {
-            get { return Tickets.Select(a=>a.EngineName).Distinct().Aggregate((ws,c)=>Enumerable.Concat(ws,c)); }
+            get { return Tickets.Select(a=>a.EngineName).Distinct().Aggregate((ws,c)=>String.Concat(ws,c)); }
         }
 
         public Ticket[] Tickets
