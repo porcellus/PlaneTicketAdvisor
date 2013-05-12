@@ -17,6 +17,6 @@ namespace PlaneTicketAdvisorCS
             Application.SetCompatibleTextRenderingDefault(false);
             var frm = new Form1();
             Application.Run(frm);
-        }
+        }  
     }
 }

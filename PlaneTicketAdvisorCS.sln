@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlaneTicketAdvisorCS", "PlaneTicketAdvisorCS\PlaneTicketAdvisorCS.csproj", "{46E679B0-69BA-4DC2-B267-C47692CEBFC9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TicketAdvisor", "PlaneTicketAdvisorCS\TicketAdvisor.csproj", "{46E679B0-69BA-4DC2-B267-C47692CEBFC9}"
 	ProjectSection(ProjectDependencies) = postProject
 		{BC23B44E-C924-4B38-AD3C-A2133D4C2E33} = {BC23B44E-C924-4B38-AD3C-A2133D4C2E33}
 	EndProjectSection
@@ -11,11 +11,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebMiner", "WebMiner\WebMin
 		{BC23B44E-C924-4B38-AD3C-A2133D4C2E33} = {BC23B44E-C924-4B38-AD3C-A2133D4C2E33}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusinessLogic", "BusinessLogic\BusinessLogic.csproj", "{BC23B44E-C924-4B38-AD3C-A2133D4C2E33}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TravelSearchManager", "BusinessLogic\TravelSearchManager.csproj", "{BC23B44E-C924-4B38-AD3C-A2133D4C2E33}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "UnitTests\UnitTests.csproj", "{AB090B41-DE6D-475A-8E9E-EEDB4C24347B}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlaneTicketAdvisorMetroView", "PlaneTicketAdvisorMetroView\PlaneTicketAdvisorMetroView.csproj", "{EF4C212F-4F48-44A8-9C4E-9E82912594D6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -72,17 +70,6 @@ Global
 		{AB090B41-DE6D-475A-8E9E-EEDB4C24347B}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{AB090B41-DE6D-475A-8E9E-EEDB4C24347B}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{AB090B41-DE6D-475A-8E9E-EEDB4C24347B}.Release|x86.ActiveCfg = Release|Any CPU
-		{EF4C212F-4F48-44A8-9C4E-9E82912594D6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{EF4C212F-4F48-44A8-9C4E-9E82912594D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{EF4C212F-4F48-44A8-9C4E-9E82912594D6}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{EF4C212F-4F48-44A8-9C4E-9E82912594D6}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{EF4C212F-4F48-44A8-9C4E-9E82912594D6}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{EF4C212F-4F48-44A8-9C4E-9E82912594D6}.Debug|x86.Build.0 = Debug|Any CPU
-		{EF4C212F-4F48-44A8-9C4E-9E82912594D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{EF4C212F-4F48-44A8-9C4E-9E82912594D6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{EF4C212F-4F48-44A8-9C4E-9E82912594D6}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{EF4C212F-4F48-44A8-9C4E-9E82912594D6}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{EF4C212F-4F48-44A8-9C4E-9E82912594D6}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

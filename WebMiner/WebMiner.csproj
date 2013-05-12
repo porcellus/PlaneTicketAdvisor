@@ -58,9 +58,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\BusinessLogic\BusinessLogic.csproj">
+    <ProjectReference Include="..\BusinessLogic\TravelSearchManager.csproj">
       <Project>{bc23b44e-c924-4b38-ad3c-a2133d4c2e33}</Project>
-      <Name>BusinessLogic</Name>
+      <Name>TravelSearchManager</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

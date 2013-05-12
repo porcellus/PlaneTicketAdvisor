@@ -54,9 +54,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\BusinessLogic\BusinessLogic.csproj">
+    <ProjectReference Include="..\BusinessLogic\TravelSearchManager.csproj">
       <Project>{BC23B44E-C924-4B38-AD3C-A2133D4C2E33}</Project>
-      <Name>BusinessLogic</Name>
+      <Name>TravelSearchManager</Name>
     </ProjectReference>
   </ItemGroup>
   <Choose>

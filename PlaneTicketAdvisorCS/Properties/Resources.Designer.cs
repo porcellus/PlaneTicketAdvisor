@@ -232,6 +232,15 @@ namespace PlaneTicketAdvisorCS.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Leállít.
+        /// </summary>
+        internal static string Form1_btnSearch_Click_Stop {
+            get {
+                return ResourceManager.GetString("Form1_btnSearch_Click_Stop", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Felnőttek.
         /// </summary>
         internal static string Form1_Form1_Load_Adults {
@@ -363,6 +372,24 @@ namespace PlaneTicketAdvisorCS.Properties {
         internal static string Form1_resultCheck_Tick_Kész {
             get {
                 return ResourceManager.GetString("Form1_resultCheck_Tick_Kész", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Keres.
+        /// </summary>
+        internal static string Form1_resultCheck_Tick_Search {
+            get {
+                return ResourceManager.GetString("Form1_resultCheck_Tick_Search", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Leállítva.
+        /// </summary>
+        internal static string Form1_resultCheck_Tick_Stopped {
+            get {
+                return ResourceManager.GetString("Form1_resultCheck_Tick_Stopped", resourceCulture);
             }
         }
     }

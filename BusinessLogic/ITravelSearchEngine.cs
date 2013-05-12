@@ -3,11 +3,14 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Text;
 
 namespace BusinessLogic
 {
     public class Ticket
     {
+        public string EngineName;
+
         public long Price { get; set; }
         public long Perprice { get; set; }
 
@@ -39,8 +42,9 @@ namespace BusinessLogic
         public TimeSpan OutTravelTime { get; set; }
         public TimeSpan BackTravelTime { get; set; }
 
-        public Ticket(string str)
+        public Ticket(string engineName,string str="")
         {
+            EngineName = engineName;
             str = str.Trim(" {}".ToCharArray());
             var props = str.Split(',');
 
@@ -74,12 +78,11 @@ namespace BusinessLogic
                     case "outStops ": OutStops = int.Parse(tmp[1]);break;
                     case "backStops ": BackStops = int.Parse(tmp[1]); break;
 
-                    case "outTravelTime": OutTravelTime = TimeSpan.Parse(tmp[1]); break;
-                    case "backTravelTime": BackTravelTime = TimeSpan.Parse(tmp[1]); break;
+                    case "outTravelTime": OutTravelTime = new TimeSpan(int.Parse(tmp[1].Split(':')[0]), int.Parse(tmp[1].Split(':')[1]), 0); break;
+                    case "backTravelTime": BackTravelTime = new TimeSpan(int.Parse(tmp[1].Split(':')[0]), int.Parse(tmp[1].Split(':')[1]), 0); break;
                 }
             }
         }
-
     }
 
     public class Travel : IEquatable<Travel>
@@ -124,8 +127,8 @@ namespace BusinessLogic
 
         public Travel(string @from, string to, DateTime date, int adults = 1, int children = 0, int infants = 0)
         {
-            To = to;
             From = @from;
+            To = to;
             Date = date;
             Adults = adults;
             Children = children;
@@ -162,15 +165,44 @@ namespace BusinessLogic
         public DateTime? RetDate;
 
         public Search(string @from, string to, DateTime date, DateTime? retDate = null, int adults = 1, int children = 0, int infants = 0)
-            : base(to, @from, date, adults, children, infants)
+            : base(@from, to, date, adults, children, infants)
         {
             RetDate = retDate;
         }
     }
 
-    public struct ResultSet
+    public struct ResultSet : IEquatable<ResultSet>
     {
-        private string _engineName;
+        #region IEquatable
+
+        public bool Equals(ResultSet other)
+        {
+            return Equals(_tickets, other._tickets);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            return obj is ResultSet && Equals((ResultSet) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return (_tickets != null ? _tickets.GetHashCode() : 0);
+        }
+
+        public static bool operator ==(ResultSet left, ResultSet right)
+        {
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(ResultSet left, ResultSet right)
+        {
+            return !left.Equals(right);
+        }
+
+        #endregion
+
         private Ticket[] _tickets;
 
         public int TicketCount
@@ -194,8 +226,7 @@ namespace BusinessLogic
 
         public string EngineName
         {
-            get { return _engineName; }
-            set { _engineName = value; }
+            get { return Tickets.Select(a=>a.EngineName).Distinct().Aggregate((ws,c)=>Enumerable.Concat(ws,c)); }
         }
 
         public Ticket[] Tickets
@@ -204,9 +235,8 @@ namespace BusinessLogic
             set { _tickets = value; }
         }
 
-        public ResultSet(string engineName, Ticket[] tickets = null)
+        public ResultSet(Ticket[] tickets = null)
         {
-            _engineName = engineName;
             _tickets = tickets;
         }
     }
@@ -220,6 +250,6 @@ namespace BusinessLogic
         void ClearSearches();
 
         double GetProgressPercent();
-        IDictionary<Search, ResultSet> GetResults();
+        IDictionary<Search, Ticket[]> GetResults();
     }
 }

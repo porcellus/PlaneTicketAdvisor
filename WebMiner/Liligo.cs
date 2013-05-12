@@ -16,10 +16,8 @@ namespace WebMiner
         private const int SearchDelay = 3000;
         private readonly Queue<Search> _searchList = new Queue<Search>();
         private readonly Dictionary<Search, Thread> _searchThreads = new Dictionary<Search, Thread>();
-        private readonly ConcurrentDictionary<Search, ResultSet> _searchResults = new ConcurrentDictionary<Search, ResultSet>();
-        private readonly Dictionary<Search, int>  _searchProgresses = new Dictionary<Search, int>();
-        private readonly Dictionary<Search, BrowserSimulator> _searchBrowsers = new Dictionary<Search, BrowserSimulator>();
-        private readonly Dictionary<Search, Timer> _searchTimers = new Dictionary<Search, Timer>();
+        private readonly ConcurrentDictionary<Search, Ticket[]> _searchResults = new ConcurrentDictionary<Search, Ticket[]>();
+        private readonly ConcurrentDictionary<Search, int> _searchProgresses = new ConcurrentDictionary<Search, int>();
 
         #region ITravelSearchEngine
         public void Initialize()
@@ -28,15 +26,20 @@ namespace WebMiner
 
         public void StartSearches()
         {
+            if (_activeSearches > 0)
+            {
+                CancelSearches();
+            }
+
             new Task(delegate
                 {
                     while(_activeSearches < MaxSearchCount && _searchList.Count > 0)
                     {
                         var search = _searchList.Dequeue();
-                        _searchBrowsers[search] = new BrowserSimulator("http://liligo.hu");
                         _searchProgresses[search] = 0;
 
                         _searchThreads.Add(search, new Thread(StartSearchThread));
+                        _searchThreads[search].IsBackground = true;
                         _searchThreads[search].Start(search);
 
                         ++_activeSearches;
@@ -52,11 +55,14 @@ namespace WebMiner
 
         public void CancelSearches()
         {
-            foreach (var thread in _searchThreads)
+            _searchList.Clear();
+            _activeSearches = 0;
+            while(_searchThreads.Count>0)
             {
+                var thread = _searchThreads.First();
                 thread.Value.Abort();
+                _searchThreads.Remove(thread.Key);
             }
-            _searchThreads.Clear();
         }
 
         public void AddSearch(Search nSearch)
@@ -66,7 +72,7 @@ namespace WebMiner
 
         public void ClearSearches()
         {
-            if(_activeSearches>0) CancelSearches();
+            if(_activeSearches>0) return;
             _searchList.Clear();
         }
 
@@ -91,11 +97,11 @@ namespace WebMiner
         #region Individual Search
         private void StartSearch(Search searchInp)
         {
-            _searchBrowsers[searchInp].DocumentReady += browser_DocumentReady;
-            _searchBrowsers[searchInp].AddressChanged += (s, e) => Browser_AddressChanged(e, searchInp);
-            _searchBrowsers[searchInp].Source = new Uri("http://liligo.hu");
+            var browser = new BrowserSimulator("http://liligo.hu");
+            browser.DocumentReady += browser_DocumentReady;
+            browser.Source = new Uri("http://liligo.hu");
 
-            while (!_searchBrowsers[searchInp].IsDocumentReady)
+            while (!browser.IsDocumentReady)
             {
                 Thread.Sleep(100);
             }
@@ -103,40 +109,69 @@ namespace WebMiner
             BrowserSimulator.Update();
             //((Awesomium.Core.BitmapSurface)_searchBrowsers[searchInp].Surface).SaveToJPEG(searchInp.From + "-" + searchInp.To + "-before-input.jpg");
 
-            _searchBrowsers[searchInp].ClickElementPersistent("air-from");
-            _searchBrowsers[searchInp].Type(searchInp.From);
+            browser.ClickElementPersistent("air-from");
+            browser.Type(searchInp.From);
             Thread.Sleep(1000);
             _searchProgresses[searchInp] += 2;
-            _searchBrowsers[searchInp].ClickElementPersistent("air-to");
-            _searchBrowsers[searchInp].Type(searchInp.To);
+            browser.ClickElementPersistent("air-to");
+            browser.Type(searchInp.To);
             Thread.Sleep(1000);
             _searchProgresses[searchInp] += 2;
-            _searchBrowsers[searchInp].ClickElementPersistent("air-out-date");
-            _searchBrowsers[searchInp].ExecuteJavascriptWithResult("liligo.DatePicker2.actual.select(Date.parse('" + searchInp.Date.ToShortDateString() + "'),false)");
+            browser.ClickElementPersistent("air-out-date");
+            browser.ExecuteJavascriptWithResult("liligo.DatePicker2.actual.select(Date.parse('" + searchInp.Date.ToShortDateString() + "'),false)");
             Thread.Sleep(1000);
             _searchProgresses[searchInp] += 2;
 
             if (searchInp.RetDate.HasValue)
             {
-                _searchBrowsers[searchInp].ClickElementPersistent("air-ret-date");
-                _searchBrowsers[searchInp].ExecuteJavascriptWithResult("liligo.DatePicker2.actual.select(Date.parse('" + searchInp.RetDate.Value.ToShortDateString() + "'),false)");
+                browser.ClickElementPersistent("air-ret-date");
+                browser.ExecuteJavascriptWithResult("liligo.DatePicker2.actual.select(Date.parse('" + searchInp.RetDate.Value.ToShortDateString() + "'),false)");
             }
             else
             {
-                _searchBrowsers[searchInp].ClickElementPersistent("air-subcategory-oneway");
+                browser.ClickElementPersistent("air-subcategory-oneway");
             }
 
-            _searchBrowsers[searchInp].ExecuteJavascriptWithResult("document.getElementById('air-adults').value=" + searchInp.Adults + ";");
-            _searchBrowsers[searchInp].ExecuteJavascriptWithResult("document.getElementById('air-children').value=" + searchInp.Children + ";");
-            _searchBrowsers[searchInp].ExecuteJavascriptWithResult("document.getElementById('air-infants').value=" + searchInp.Infants + ";");
+            browser.ExecuteJavascriptWithResult("document.getElementById('air-adults').value=" + searchInp.Adults + ";");
+            browser.ExecuteJavascriptWithResult("document.getElementById('air-children').value=" + searchInp.Children + ";");
+            browser.ExecuteJavascriptWithResult("document.getElementById('air-infants').value=" + searchInp.Infants + ";");
 
             Thread.Sleep(1000);
             _searchProgresses[searchInp] += 2;
-            _searchBrowsers[searchInp].ClickElementPersistent("air-flexibility");
+            browser.ClickElementPersistent("air-flexibility");
             //((Awesomium.Core.BitmapSurface)_searchBrowsers[searchInp].Surface).SaveToJPEG(searchInp.From + "-"+searchInp.To+"-after-input.jpg");
-            _searchBrowsers[searchInp].ClickElementPersistent("air-submit");
-            _searchBrowsers[searchInp].ClickElementPersistent("air-submit");
-            //((Awesomium.Core.BitmapSurface)_searchBrowsers[searchInp].Surface).SaveToJPEG(searchInp.From + "-" + searchInp.To + "-after-click.jpg");
+            browser.ClickElementPersistent("air-submit");
+            browser.ClickElementPersistent("air-submit");
+            ((Awesomium.Core.BitmapSurface)browser.Surface).SaveToJPEG(searchInp.From + "-" + searchInp.To + "-after-click.jpg");
+            while (
+                !(browser.IsDocumentReady && browser.Source.AbsoluteUri == "http://www.liligo.hu/air/SearchFlights.jsp"))
+            {
+                Thread.Sleep(100);
+            }
+
+            Thread.Sleep(500);
+
+            bool end = false;
+            while (!end)
+            {
+                ((Awesomium.Core.BitmapSurface)browser.Surface).SaveToJPEG(searchInp.From + "-" + searchInp.To + "-results.jpg");
+                Awesomium.Core.JSValue[] res = browser.ExecuteJavascriptWithResult("objArrayToString(getResults());");
+                if (res.Count() > 0 && !res[0].IsUndefined)
+                    _searchResults[searchInp] = (from r in res select new Ticket("liligo", r.ToString())).ToArray();
+                else _searchResults[searchInp] = new Ticket[0];
+
+                var isOver = browser.ExecuteJavascriptWithResult(
+                        "(function(){return document.getElementsByClassName('stopped-finished').length == 1})()");
+                if (isOver.IsBoolean && (bool)isOver)
+                {
+                    _searchProgresses[searchInp] = 80;
+                    --_activeSearches;
+                    end = true;
+                }
+                else if (_searchProgresses[searchInp] < 79) _searchProgresses[searchInp]++;
+            }
+            _searchThreads.Remove(searchInp);
+            if(_searchList.Count > 0) StartSearches();
         }
 
         static void browser_DocumentReady(object sender, Awesomium.Core.WebViewEventArgs e)
@@ -195,51 +230,7 @@ namespace WebMiner
                     }
             ");
         }
-
-        private void Browser_AddressChanged(Awesomium.Core.UrlEventArgs ev, Search search)
-        {
-            if (ev.Url.AbsoluteUri == "http://www.liligo.hu/air/SearchFlights.jsp")
-            {
-                _searchTimers.Add(search, new Timer(ResultChecker, search, 0, 500));
-            }
-        }
-
-        private void ResultChecker(Object obj)
-        {
-            var search = obj as Search;
-
-            Debug.Assert(search != null, "search != null");
-            if(!_searchBrowsers[search].IsDocumentReady) return;
-            Awesomium.Core.JSValue[] res = _searchBrowsers[search].ExecuteJavascriptWithResult("objArrayToString(getResults());");
-            if (res.Count() > 0 && !res[0].IsUndefined)
-                _searchResults[search] = new ResultSet("liligo", (from r in res select new Ticket(r.ToString())).ToArray());
-            else _searchResults[search] = new ResultSet("liligo");
-            /*
-             foreach (var result in _searchResults[search].Tickets)
-            {
-                result.OutStartDate = search.Date;
-                if(search.RetDate.HasValue) result.BackStartDate = search.RetDate.Value.Date;
-            }*/
-            var isOver = _searchBrowsers[search].ExecuteJavascriptWithResult(
-                    "(function(){return document.getElementsByClassName('stopped-finished').length == 1})()");
-            if (isOver.IsBoolean && (bool)isOver)
-            {
-                _searchProgresses[search] = 80;
-                --_activeSearches;
-                _searchTimers[search].Dispose();
-                StartSearches();
-            }
-            else if(_searchProgresses[search] < 79) _searchProgresses[search]++;
-        }
-
-        public void TestImageExp()
-        {
-            foreach (var browser in _searchBrowsers)
-            {
-                ((Awesomium.Core.BitmapSurface) browser.Value.Surface).SaveToJPEG(browser.Key.From + "-" +
-                                                                                  browser.Key.To + "-test.jpg");
-            }
-        }
+        
         #endregion
     }
 }

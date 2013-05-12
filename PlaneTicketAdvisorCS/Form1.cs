@@ -71,8 +71,6 @@ namespace PlaneTicketAdvisorCS
 
             var currentDomain = AppDomain.CurrentDomain;
             currentDomain.UnhandledException += MyHandler;
-            grdResults.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.Fill);
-            grdTravels.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.Fill);
         }
 
         static void MyHandler(object sender, UnhandledExceptionEventArgs args)
@@ -92,18 +90,6 @@ namespace PlaneTicketAdvisorCS
             Application.Exit();
         }
 
-        private void loadToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            var fdialog = new OpenFileDialog();
-            fdialog.ShowDialog();
-        }
-
-        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            var sdialog = new SaveFileDialog();
-            sdialog.ShowDialog();
-        }
-
         private void btnSearch_Click(object sender, EventArgs e)
         {
             if (_travelSearchManager.IsSearchInProgress)
@@ -112,14 +98,20 @@ namespace PlaneTicketAdvisorCS
             }
             else
             {
-                statusLabel.Text = Resources.Form1_btnSearch_Click_Searching;
-                progressBar.Step = 1;
+                if (_travelSearchManager.Travels.Count > 0)
+                {
+                    statusLabel.Text = Resources.Form1_btnSearch_Click_Searching;
+                    progressBar.Step = 1;
 
-                _travelSearchManager.StartSearch();
+                    _travelSearchManager.StartSearch();
 
-                var resultCheck = new Timer {Interval = 1000};
-                resultCheck.Tick += resultCheck_Tick;
-                resultCheck.Start();
+                    var resultCheck = new Timer {Interval = 1000};
+                    resultCheck.Tick += resultCheck_Tick;
+                    resultCheck.Start();
+                }
+                btnSearch.Text = Resources.Form1_btnSearch_Click_Stop;
+                grdTravels.Enabled = false;
+                btnAdd.Enabled = btnRemove.Enabled = false;
             }
         }
 
@@ -130,14 +122,23 @@ namespace PlaneTicketAdvisorCS
             progressBar.Value = _travelSearchManager.GetProgress();
             if (progressBar.Value == 100) statusLabel.Text = Resources.Form1_resultCheck_Tick_Done;
             var results = _travelSearchManager.GetResults();
-            //if (dataGridView1.DataSource == null || results.TrueForAll(a => ((object[])dataGridView1.DataSource).Length))
-            //listView1.Clear();
-            if(grdResults.RowCount == results.Count) return;
-            ResultSets.Clear();
-            ResultSets.AddRange(results);
-            grdResults.DataSource = null;
-            grdResults.DataSource = ResultSets;
-            grdResults.Refresh();
+            if (grdResults.RowCount != results.Count)
+            {
+                ResultSets.Clear();
+                ResultSets.AddRange(results);
+                grdResults.DataSource = null;
+                grdResults.DataSource = ResultSets;
+                grdResults.Refresh();
+            }
+            if (!_travelSearchManager.IsSearchInProgress)
+            {
+                statusLabel.Text = Resources.Form1_resultCheck_Tick_Done;
+                btnSearch.Text = Resources.Form1_resultCheck_Tick_Search;
+                grdTravels.Enabled = true;
+                btnAdd.Enabled = btnRemove.Enabled = true;
+                ((Timer)sender).Stop();
+                ((Timer)sender).Dispose();
+            }
         }
 
         private void cbIsRet_CheckedChanged(object sender, EventArgs e)
@@ -151,17 +152,12 @@ namespace PlaneTicketAdvisorCS
             if(cbIsRet.Checked)
                 _travelSearchManager.AddTravel(tbTo.Text, tbFrom.Text, dtRet.Value, (int) spAdult.Value, (int) spChild.Value, (int) spInfant.Value);
 
-            grdTravels.DataSource = _travelSearchManager.FlightList.ToList();
+            grdTravels.DataSource = _travelSearchManager.Travels.ToList();
         }
 
         private void dtDep_ValueChanged(object sender, EventArgs e)
         {
             dtRet.MinDate = dtDep.Value;
-        }
-
-        private void runtestToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            _liligo.TestImageExp();
         }
 
         private void grdResults_SelectionChanged(object sender, EventArgs e)
@@ -177,18 +173,23 @@ namespace PlaneTicketAdvisorCS
         private void btnRemove_Click(object sender, EventArgs e)
         {
             if(grdTravels.SelectedRows.Count!=1) return;
-            _travelSearchManager.RemoveTravel(grdTravels.SelectedRows[0].Index);
-            grdTravels.DataSource = _travelSearchManager.FlightList;
+            var ind = grdTravels.SelectedRows[0].Index;
+            grdTravels.DataSource = null;
+            grdTravels.ClearSelection();
+            _travelSearchManager.RemoveTravel(ind);
+            grdTravels.DataSource = _travelSearchManager.Travels;
         }
 
         private void grdTravels_SelectionChanged(object sender, EventArgs e)
         {
             btnRemove.Enabled = grdTravels.SelectedRows.Count == 1;
+            btnSearch.Enabled = grdTravels.RowCount > 0;
         }
 
         private void grdTravels_RowsChanged(object sender, EventArgs e)
         {
             btnSearch.Enabled = grdTravels.RowCount > 0;
+            btnRemove.Enabled = grdTravels.RowCount > 0;
         }
 
         private void flowLayoutPanel1_Resize(object sender, EventArgs e)

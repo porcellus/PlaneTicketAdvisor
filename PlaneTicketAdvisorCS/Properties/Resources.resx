@@ -221,4 +221,13 @@
   <data name="DetailView_DetailView_OutCompany" xml:space="preserve">
     <value>Cég (oda)</value>
   </data>
+  <data name="Form1_btnSearch_Click_Stop" xml:space="preserve">
+    <value>Leállít</value>
+  </data>
+  <data name="Form1_resultCheck_Tick_Search" xml:space="preserve">
+    <value>Keres</value>
+  </data>
+  <data name="Form1_resultCheck_Tick_Stopped" xml:space="preserve">
+    <value>Leállítva</value>
+  </data>
 </root>

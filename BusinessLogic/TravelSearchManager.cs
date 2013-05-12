@@ -24,13 +24,15 @@ namespace BusinessLogic
         }
 
 #region Fields
-        public List<Travel> FlightList { get; private set; }
+        public List<Travel> Travels { get; private set; }
 
         //private readonly Dictionary<Tuple<Search,DateTime>, List<Ticket>> _cache = new Dictionary<Tuple<Search, DateTime>, List<Ticket>>();
 
         private readonly ITravelSearchEngine[] _searchEngines;
 
-        public bool IsSearchInProgress { get; private set;}
+        public bool IsSearchInProgress { get;
+            private set;
+        }
 
         private List<List<Search>> _searchPlans;
 #endregion
@@ -43,32 +45,40 @@ namespace BusinessLogic
                 engine.Initialize();
             }
 
-            FlightList = new List<Travel>();
+            Travels = new List<Travel>();
         }
 
-        public void AddTravel(string @from,string to, DateTime date, int adults = 1, int children = 0, int infants = 0)
+        public bool AddTravel(string @from,string to, DateTime date, int adults = 1, int children = 0, int infants = 0)
         {
-            if(!IsSearchInProgress) FlightList.Add(new Travel(from, to, date, adults, children, infants));
+            if(!IsSearchInProgress) Travels.Add(new Travel(from, to, date, adults, children, infants));
+            return !IsSearchInProgress;
         }
 
-        public void RemoveTravel(int ind)
+        public bool AddTravel(Travel travel)
         {
-            if(!IsSearchInProgress) FlightList.RemoveAt(ind);
+            if (!IsSearchInProgress) Travels.Add(travel);
+            return !IsSearchInProgress;
+
+        }
+
+        public bool RemoveTravel(int ind)
+        {
+            if (!IsSearchInProgress) Travels.RemoveAt(ind);
+            return !IsSearchInProgress;
         }
 
         public void CancelSearch()
         {
-            IsSearchInProgress = false;
-
             foreach (var engine in _searchEngines)
             {
                 engine.CancelSearches();
             }
+            IsSearchInProgress = false;
         }
 
-        public List<List<Search>> GetSearchPlans(bool[] checks = null)
+        private List<List<Search>> GetSearchPlans(bool[] checks = null)
         {
-            if(checks==null) checks = Enumerable.Repeat(false, FlightList.Count).ToArray();
+            if(checks==null) checks = Enumerable.Repeat(false, Travels.Count).ToArray();
             var first = Array.IndexOf(checks,false);
 
             if (first == -1) return new List<List<Search>> { new List<Search>() };
@@ -78,24 +88,24 @@ namespace BusinessLogic
             var retVal = GetSearchPlans(checks);
             retVal.ForEach(
                 a =>
-                a.Add(new Search(FlightList[first].From, FlightList[first].To, FlightList[first].Date,
+                a.Add(new Search(Travels[first].From, Travels[first].To, Travels[first].Date,
                                  null,
-                                 FlightList[first].Adults, FlightList[first].Children, FlightList[first].Infants)
+                                 Travels[first].Adults, Travels[first].Children, Travels[first].Infants)
                     ));
 
-            for (int i = first+1; i < FlightList.Count; ++i)
+            for (int i = first+1; i < Travels.Count; ++i)
             {
-                if (!checks[i] && FlightList[i].To == FlightList[first].From && FlightList[i].From == FlightList[first].To &&
-                    FlightList[i].Adults == FlightList[first].Adults && FlightList[i].Children == FlightList[first].Children &&
-                    FlightList[i].Infants == FlightList[first].Infants && FlightList[i].Date >= FlightList[first].Date)
+                if (!checks[i] && Travels[i].To == Travels[first].From && Travels[i].From == Travels[first].To &&
+                    Travels[i].Adults == Travels[first].Adults && Travels[i].Children == Travels[first].Children &&
+                    Travels[i].Infants == Travels[first].Infants && Travels[i].Date >= Travels[first].Date)
                 {
                     checks[i] = true;
                     var rec = GetSearchPlans(checks);
                     rec.ForEach(
                         a =>
-                        a.Add(new Search(FlightList[first].From, FlightList[first].To, FlightList[first].Date,
-                                         FlightList[i].Date,
-                                         FlightList[first].Adults, FlightList[first].Children, FlightList[first].Infants)
+                        a.Add(new Search(Travels[first].From, Travels[first].To, Travels[first].Date,
+                                         Travels[i].Date,
+                                         Travels[first].Adults, Travels[first].Children, Travels[first].Infants)
                             ));
                     retVal.AddRange(rec);
 
@@ -110,7 +120,8 @@ namespace BusinessLogic
 
         public void StartSearch(/*bool forceRefresh = false*/)
         {
-            if (FlightList.Count == 0) return;
+            if (Travels.Count == 0) return;
+            IsSearchInProgress = true;
 
             _searchPlans = GetSearchPlans();
 
@@ -137,7 +148,7 @@ namespace BusinessLogic
 
             if (_searchPlans.Count == 0) return retVal;
 
-            var tmp = new Dictionary<ITravelSearchEngine, IDictionary<Search, ResultSet>>();
+            var tmp = new Dictionary<ITravelSearchEngine, IDictionary<Search, Ticket[]>>();
             foreach (var engine in _searchEngines)
                 tmp[engine] = engine.GetResults();
 
@@ -148,7 +159,7 @@ namespace BusinessLogic
                 {
                     if (tmp[engine].ContainsKey(search))
                     {
-                        resultSets[search].AddRange(tmp[engine][search].Tickets.OrderBy(a => a.Price));
+                        resultSets[search].AddRange(tmp[engine][search].OrderBy(a => a.Price));
                     }
                 }
                 /*
@@ -165,17 +176,21 @@ namespace BusinessLogic
             {
                 var result = plan.Aggregate(new List<List<Ticket>> {new List<Ticket>()}, (current, search) => Combine(current, resultSets[search]));
 
-                retVal.AddRange(result.Select(a=> new ResultSet("liligo.hu", a.ToArray()) ));
+                retVal.AddRange(result.Select(a=> new ResultSet(a.ToArray()) ));
             }
 
             retVal = retVal.OrderBy(a => a.SumPrice).ToList();
+
+            IsSearchInProgress &= (int)Math.Floor(_searchEngines.Average(c => c.GetProgressPercent())) < 100;
 
             return retVal.Take(100).ToList();
         }
 
         public int GetProgress()
         {
-            return (int) Math.Floor(_searchEngines.Average(c => c.GetProgressPercent()));
+            var retVal = (int) Math.Floor(_searchEngines.Average(c => c.GetProgressPercent()));
+            IsSearchInProgress &= retVal < 100;
+            return retVal;
         }
     }
 }

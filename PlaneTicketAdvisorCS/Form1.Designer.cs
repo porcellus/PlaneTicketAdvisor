@@ -29,13 +29,6 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
-            this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.loadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.runtestToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.webControl1 = new Awesomium.Windows.Forms.WebControl(this.components);
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.progressBar = new System.Windows.Forms.ToolStripProgressBar();
@@ -65,7 +58,6 @@
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
-            this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer)).BeginInit();
             this.splitContainer.Panel1.SuspendLayout();
@@ -79,65 +71,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.spChild)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.spAdult)).BeginInit();
             this.SuspendLayout();
-            // 
-            // menuStrip1
-            // 
-            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.fileToolStripMenuItem,
-            this.aboutToolStripMenuItem,
-            this.runtestToolStripMenuItem});
-            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
-            this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(746, 24);
-            this.menuStrip1.TabIndex = 1;
-            this.menuStrip1.Text = "menuStrip1";
-            // 
-            // fileToolStripMenuItem
-            // 
-            this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.loadToolStripMenuItem,
-            this.saveToolStripMenuItem,
-            this.exitToolStripMenuItem});
-            this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
-            this.fileToolStripMenuItem.Text = "File";
-            // 
-            // loadToolStripMenuItem
-            // 
-            this.loadToolStripMenuItem.Enabled = false;
-            this.loadToolStripMenuItem.Name = "loadToolStripMenuItem";
-            this.loadToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
-            this.loadToolStripMenuItem.Text = "Betöltés";
-            this.loadToolStripMenuItem.Click += new System.EventHandler(this.loadToolStripMenuItem_Click);
-            // 
-            // saveToolStripMenuItem
-            // 
-            this.saveToolStripMenuItem.Enabled = false;
-            this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
-            this.saveToolStripMenuItem.Text = "Mentés";
-            this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
-            // 
-            // exitToolStripMenuItem
-            // 
-            this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
-            this.exitToolStripMenuItem.Text = "Kilépés";
-            this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
-            // 
-            // aboutToolStripMenuItem
-            // 
-            this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(53, 20);
-            this.aboutToolStripMenuItem.Text = "Rólam";
-            this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
-            // 
-            // runtestToolStripMenuItem
-            // 
-            this.runtestToolStripMenuItem.Name = "runtestToolStripMenuItem";
-            this.runtestToolStripMenuItem.Size = new System.Drawing.Size(56, 20);
-            this.runtestToolStripMenuItem.Text = "runtest";
-            this.runtestToolStripMenuItem.Click += new System.EventHandler(this.runtestToolStripMenuItem_Click);
             // 
             // webControl1
             // 
@@ -186,9 +119,7 @@
             // 
             // splitContainer.Panel2
             // 
-            this.splitContainer.Panel2.Controls.Add(this.btnRemove);
             this.splitContainer.Panel2.Controls.Add(this.flowLayoutPanel1);
-            this.splitContainer.Panel2.Controls.Add(this.btnSearch);
             this.splitContainer.Panel2.Controls.Add(this.grdResults);
             this.splitContainer.Size = new System.Drawing.Size(734, 452);
             this.splitContainer.SplitterDistance = 78;
@@ -221,7 +152,7 @@
             // 
             this.btnRemove.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.btnRemove.Enabled = false;
-            this.btnRemove.Location = new System.Drawing.Point(347, 3);
+            this.btnRemove.Location = new System.Drawing.Point(87, 90);
             this.btnRemove.Name = "btnRemove";
             this.btnRemove.Size = new System.Drawing.Size(75, 23);
             this.btnRemove.TabIndex = 21;
@@ -235,9 +166,9 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.flowLayoutPanel1.Controls.Add(this.dvSelected);
-            this.flowLayoutPanel1.Location = new System.Drawing.Point(347, 29);
+            this.flowLayoutPanel1.Location = new System.Drawing.Point(347, 0);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(382, 336);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(382, 365);
             this.flowLayoutPanel1.TabIndex = 3;
             this.flowLayoutPanel1.Resize += new System.EventHandler(this.flowLayoutPanel1_Resize);
             // 
@@ -247,14 +178,14 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.dvSelected.Location = new System.Drawing.Point(3, 3);
             this.dvSelected.Name = "dvSelected";
-            this.dvSelected.Size = new System.Drawing.Size(400, 151);
+            this.dvSelected.Size = new System.Drawing.Size(400, 154);
             this.dvSelected.TabIndex = 4;
             // 
             // btnSearch
             // 
             this.btnSearch.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnSearch.Enabled = false;
-            this.btnSearch.Location = new System.Drawing.Point(656, 3);
+            this.btnSearch.Location = new System.Drawing.Point(429, 94);
             this.btnSearch.Name = "btnSearch";
             this.btnSearch.Size = new System.Drawing.Size(75, 23);
             this.btnSearch.TabIndex = 20;
@@ -285,6 +216,8 @@
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.btnRemove);
+            this.panel1.Controls.Add(this.btnSearch);
             this.panel1.Controls.Add(this.cbIsRet);
             this.panel1.Controls.Add(this.label8);
             this.panel1.Controls.Add(this.spInfant);
@@ -302,9 +235,9 @@
             this.panel1.Controls.Add(this.label3);
             this.panel1.Controls.Add(this.label2);
             this.panel1.Controls.Add(this.label1);
-            this.panel1.Location = new System.Drawing.Point(0, 27);
+            this.panel1.Location = new System.Drawing.Point(0, 2);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(736, 91);
+            this.panel1.Size = new System.Drawing.Size(736, 116);
             this.panel1.TabIndex = 5;
             // 
             // cbIsRet
@@ -364,6 +297,11 @@
             // spAdult
             // 
             this.spAdult.Location = new System.Drawing.Point(96, 58);
+            this.spAdult.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.spAdult.Name = "spAdult";
             this.spAdult.Size = new System.Drawing.Size(37, 20);
             this.spAdult.TabIndex = 13;
@@ -416,7 +354,7 @@
             // 
             // btnAdd
             // 
-            this.btnAdd.Location = new System.Drawing.Point(510, 4);
+            this.btnAdd.Location = new System.Drawing.Point(6, 90);
             this.btnAdd.Name = "btnAdd";
             this.btnAdd.Size = new System.Drawing.Size(75, 23);
             this.btnAdd.TabIndex = 6;
@@ -467,12 +405,9 @@
             this.Controls.Add(this.splitContainer);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.statusStrip1);
-            this.Controls.Add(this.menuStrip1);
             this.Name = "Form1";
             this.Text = "Form1";
             this.Load += new System.EventHandler(this.Form1_Load);
-            this.menuStrip1.ResumeLayout(false);
-            this.menuStrip1.PerformLayout();
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
             this.splitContainer.Panel1.ResumeLayout(false);
@@ -494,12 +429,6 @@
 
         #endregion
 
-        private System.Windows.Forms.MenuStrip menuStrip1;
-        private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem loadToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
         private Awesomium.Windows.Forms.WebControl webControl1;
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripProgressBar progressBar;
@@ -524,7 +453,6 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.ToolStripMenuItem runtestToolStripMenuItem;
         private System.Windows.Forms.DataGridView grdResults;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
         private DetailView dvSelected;
