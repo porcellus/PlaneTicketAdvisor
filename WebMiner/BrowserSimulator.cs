@@ -22,6 +22,7 @@ namespace WebMiner
                     _view.DocumentReady += OnDocumentReady;
                     _view.DocumentReady += InitializeJavascript;
                     _view.AddressChanged += ViewAddressChanged;
+                    _view.ShowJavascriptDialog += OnJavaScriptDialog;
                     _view.Source = new Uri(url);
                 });
         }
@@ -53,8 +54,10 @@ namespace WebMiner
             get { return _view.Surface; }
         }
 
+        #region Events
         public event UrlEventHandler AddressChanged;
         public event WebViewEventHandler DocumentReady;
+        public event JavascriptDialogEventHandler JavaScriptDialog;
 
         private void ViewAddressChanged(object sender, UrlEventArgs ev)
         {
@@ -67,6 +70,13 @@ namespace WebMiner
             if (DocumentReady != null)
                 DocumentReady(this, urlEventArgs);
         }
+
+        private void OnJavaScriptDialog(object sender, JavascriptDialogEventArgs e)
+        {
+            if (JavaScriptDialog != null)
+                JavaScriptDialog(this, e);
+        }
+        #endregion
 
         public void MoveMouse(int x, int y)
         {

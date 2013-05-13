@@ -6,6 +6,7 @@ namespace BusinessLogic
 {
     public class TravelSearchManager
     {
+
         private static List<List<Ticket>> Combine(List<List<Ticket>> lists, IEnumerable<Ticket> nList)
         {
             var retVal = new List<List<Ticket>>();
@@ -24,6 +25,8 @@ namespace BusinessLogic
         }
 
 #region Fields
+        private const int MaxResultCount = 30;
+
         public List<Travel> Travels { get; private set; }
 
         //private readonly Dictionary<Tuple<Search,DateTime>, List<Ticket>> _cache = new Dictionary<Tuple<Search, DateTime>, List<Ticket>>();
@@ -176,7 +179,7 @@ namespace BusinessLogic
             {
                 var result = plan.Aggregate(new List<List<Ticket>> {new List<Ticket>()}, (current, search) => Combine(current, resultSets[search]));
 
-                retVal.AddRange(result.Select(a=> new ResultSet(a.ToArray()) ));
+                retVal.AddRange(result.Select(a=> new ResultSet(a.ToArray())).ToList().OrderBy(a=> a.SumPrice).Take(MaxResultCount / plan.Count));
             }
 
             retVal = retVal.OrderBy(a => a.SumPrice).ToList();

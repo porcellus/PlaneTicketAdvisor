@@ -157,20 +157,24 @@
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
             this.flowLayoutPanel1.Size = new System.Drawing.Size(382, 365);
             this.flowLayoutPanel1.TabIndex = 3;
+            this.flowLayoutPanel1.ControlAdded += new System.Windows.Forms.ControlEventHandler(this.flowLayoutPanel1_ControlAddedRemoved);
+            this.flowLayoutPanel1.ControlRemoved += new System.Windows.Forms.ControlEventHandler(this.flowLayoutPanel1_ControlAddedRemoved);
             this.flowLayoutPanel1.Resize += new System.EventHandler(this.flowLayoutPanel1_Resize);
             // 
             // dvSelected
             // 
             this.dvSelected.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.dvSelected.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.dvSelected.Location = new System.Drawing.Point(3, 3);
             this.dvSelected.Name = "dvSelected";
-            this.dvSelected.Size = new System.Drawing.Size(400, 154);
+            this.dvSelected.Size = new System.Drawing.Size(400, 365);
             this.dvSelected.TabIndex = 4;
             // 
             // grdResults
             // 
             this.grdResults.AllowUserToDeleteRows = false;
+            this.grdResults.AllowUserToOrderColumns = true;
             this.grdResults.AllowUserToResizeRows = false;
             this.grdResults.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.grdResults.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCellsExceptHeaders;

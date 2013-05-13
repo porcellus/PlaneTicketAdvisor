@@ -207,26 +207,26 @@ namespace BusinessLogic
 
         public int TicketCount
         {
-            get { return Tickets.Count(); }
+            get { return Tickets.Length <= 0 ? 0 : Tickets.Count(); }
         }
 
         public long SumPrice {
-            get { return Tickets.Sum(a => a.Price); }
+            get { return Tickets.Length <= 0 ? 0 : Tickets.Sum(a => a.Price); }
         }
 
         public int SumStops
         {
-            get { return Tickets.Sum(a => a.OutStops + a.BackStops); }
+            get { return Tickets.Length <= 0 ? 0 : Tickets.Sum(a => a.OutStops + a.BackStops); }
         }
 
         public TimeSpan SumTravelTime
         {
-            get { return Tickets.Aggregate(new TimeSpan(),(cSpan,a) => cSpan + a.OutTravelTime + a.BackTravelTime); }
+            get { return Tickets.Length <= 0 ? new TimeSpan() : Tickets.Aggregate(new TimeSpan(), (cSpan, a) => cSpan + a.OutTravelTime + a.BackTravelTime); }
         }
 
         public string EngineName
         {
-            get { return Tickets.Select(a=>a.EngineName).Distinct().Aggregate((ws,c)=>String.Concat(ws,c)); }
+            get { return Tickets.Length <= 0 ? String.Empty : Tickets.Select(a => a.EngineName).Distinct().Aggregate((ws, c) => String.Concat(ws, c)); }
         }
 
         public Ticket[] Tickets

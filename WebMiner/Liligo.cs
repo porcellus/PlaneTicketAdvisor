@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Awesomium.Core;
 using BusinessLogic;
 
 namespace WebMiner
@@ -103,6 +104,7 @@ namespace WebMiner
         {
             var browser = new BrowserSimulator("http://liligo.hu");
             browser.DocumentReady += browser_DocumentReady;
+            browser.JavaScriptDialog += (s,e) => browser_OnJavaScriptDialog(s,e,searchInp);
             browser.Source = new Uri("http://liligo.hu");
 
             while (!browser.IsDocumentReady)
@@ -146,8 +148,20 @@ namespace WebMiner
             //((Awesomium.Core.BitmapSurface)_searchBrowsers[searchInp].Surface).SaveToJPEG(searchInp.From + "-"+searchInp.To+"-after-input.jpg");
             browser.ClickElementPersistent("air-submit");
             browser.ClickElementPersistent("air-submit");
-            ((Awesomium.Core.BitmapSurface)browser.Surface).SaveToJPEG(searchInp.From + "-" + searchInp.To + "-after-click.jpg");
+            ((Awesomium.Core.BitmapSurface)browser.Surface).SaveToJPEG(
+                searchInp.From + "-" + searchInp.To + "-" + searchInp.Date.ToString("MM-dd") +
+                (searchInp.RetDate.HasValue ? "-" + searchInp.RetDate.Value.ToString("MM-dd") : "")
+                + "-after-click.jpg");
             ResultCheckLoop(searchInp, browser);
+        }
+
+        private void browser_OnJavaScriptDialog(object sender, JavascriptDialogEventArgs e, Search search)
+        {
+            Thread ignored;
+            _searchProgresses[search] = 80;
+            _searchResults[search] = new Ticket[0];
+            _searchThreads.TryRemove(search, out ignored);
+            if (_searchQueue.Count > 0) StartSearches();
         }
 
         private void ResultCheckLoop(Search searchInp, BrowserSimulator browser)
@@ -163,7 +177,10 @@ namespace WebMiner
             bool end = false;
             while (!end)
             {
-                ((Awesomium.Core.BitmapSurface)browser.Surface).SaveToJPEG(searchInp.From + "-" + searchInp.To + "-results.jpg");
+                ((Awesomium.Core.BitmapSurface)browser.Surface).SaveToJPEG(
+                    searchInp.From + "-" + searchInp.To + "-" + searchInp.Date.ToString("MM-dd") +
+                    (searchInp.RetDate.HasValue ? "-" + searchInp.RetDate.Value.ToString("MM-dd") : "")
+                    + "-results.jpg");
                 Awesomium.Core.JSValue[] res = browser.ExecuteJavascriptWithResult("objArrayToString(getResults());");
                 if (res.Count() > 0 && !res[0].IsUndefined)
                     _searchResults[searchInp] = (from r in res select new Ticket("liligo", r.ToString())).ToArray();
@@ -195,18 +212,18 @@ namespace WebMiner
         
                             outCompany: x.getElementsByClassName('company')[1].getElementsByClassName('content')[0].innerHTML.trim(),
         
-                            outStartDate: document.getElementsByClassName('header-summary')[0].getElementsByClassName('dates')[1].innerHTML.trim(),
+                            outStartDate: document.getElementsByClassName('header-summary')[0].getElementsByClassName('dates')[0].innerHTML.trim(),
                             outStartTime: x.getElementsByClassName('from-time')[1].getElementsByClassName('content')[0].innerHTML.trim(),
                             outStartStation: x.getElementsByClassName('from-station')[1].getElementsByClassName('content')[0].innerHTML.trim(),
         
                             outArriveTime: x.getElementsByClassName('to-time')[1].getElementsByClassName('content')[0].innerHTML.trim(),
                             outArriveStation: x.getElementsByClassName('to-station')[1].getElementsByClassName('content')[0].innerHTML.trim(),
                             outStops: x.getElementsByClassName('stops')[1]
-                                                .getElementsByTagName('span')[2].innerHTML.trim() == 'közvetlen'? '0' : 
+                                                .getElementsByTagName('span')[0].innerHTML.trim() == 'közvetlen'? '0' : 
                                                  x.getElementsByClassName('stops')[1]
-                                                  .getElementsByTagName('span')[2].innerHTML.trim()
+                                                  .getElementsByTagName('span')[0].innerHTML.trim()
                                                   .substr(0,x.getElementsByClassName('stops')[1]
-                                                    .getElementsByTagName('span')[2].innerHTML.trim().indexOf(' ')
+                                                    .getElementsByTagName('span')[0].innerHTML.trim().indexOf(' ')
                                             ),
                             outTravelTime: x.getElementsByClassName('stops')[1].getElementsByTagName('span')[1].innerHTML.trim().replace('ó',':').substr(1,4)
                         };
@@ -219,11 +236,11 @@ namespace WebMiner
                             obj.backArriveStation = x.getElementsByClassName('to-station')[1].getElementsByClassName('content')[1].innerHTML.trim();
                             obj.backArriveTime = x.getElementsByClassName('to-time')[1].getElementsByClassName('content')[1].innerHTML.trim();
                             obj.backStops= x.getElementsByClassName('stops')[1]
-                                                .getElementsByTagName('span')[2].innerHTML.trim() == 'közvetlen'? '0' : 
+                                                .getElementsByTagName('span')[0].innerHTML.trim() == 'közvetlen'? '0' : 
                                                  x.getElementsByClassName('stops')[1]
-                                                  .getElementsByTagName('span')[2].innerHTML.trim()
+                                                  .getElementsByTagName('span')[0].innerHTML.trim()
                                                   .substr(0,x.getElementsByClassName('stops')[1]
-                                                    .getElementsByTagName('span')[2].innerHTML.trim().indexOf(' ')
+                                                    .getElementsByTagName('span')[0].innerHTML.trim().indexOf(' ')
                                             );
                             obj.backTravelTime= x.getElementsByClassName('stops')[1].getElementsByTagName('span')[3].innerHTML.trim().replace('ó',':').substr(1,4);
                         }

@@ -19,7 +19,6 @@ namespace UnitTests
             myTravelManager.AddTravel("Budapest", "London", DateTime.Today.AddDays(20));
             myTravelManager.AddTravel("London", "Budapest", DateTime.Today.AddDays(21));
 
-            var searchplans = myTravelManager.GetSearchPlans();
         }
     }
 }

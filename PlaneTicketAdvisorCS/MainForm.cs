@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Windows.Forms;
 using BusinessLogic;
+using PlaneTicketAdvisorCS;
 using PlaneTicketAdvisorCS.Properties;
 
 namespace TicketAdvisor
@@ -11,8 +13,7 @@ namespace TicketAdvisor
     public partial class MainForm : Form
     {
         #region Fields
-        private readonly List<ResultSet> ResultSets = new List<ResultSet>();
-
+        private readonly SortableBindingList<ResultSet> _resultSets = new SortableBindingList<ResultSet>();
         private TravelSearchManager _travelSearchManager;
         private WebMiner.Liligo _liligo;
         #endregion
@@ -70,6 +71,7 @@ namespace TicketAdvisor
             
             grdResults.AutoGenerateColumns = false;
             grdResults.ColumnHeadersVisible = true;
+
             grdResults.DefaultCellStyle = new DataGridViewCellStyle();
             grdResults.ColumnCount = 5;
 
@@ -83,9 +85,12 @@ namespace TicketAdvisor
             grdResults.Columns[3].HeaderText = Resources.MainForm_MainForm_Load_TravelTime;
             grdResults.Columns[4].DataPropertyName = "EngineName";
             grdResults.Columns[4].HeaderText = Resources.MainForm_MainForm_Load_SearchEngineName;
-
-            //grdResults.DataSource = ResultSets;
-
+            grdResults.DataSource = _resultSets;
+            
+            foreach (DataGridViewColumn col in grdResults.Columns)
+            {
+                col.SortMode = DataGridViewColumnSortMode.Automatic;
+            }
             var currentDomain = AppDomain.CurrentDomain;
             currentDomain.UnhandledException += MyHandler;
         }
@@ -185,7 +190,14 @@ namespace TicketAdvisor
             foreach (var ctrl in flowLayoutPanel1.Controls)
             {
                 ((DetailView) ctrl).Width = flowLayoutPanel1.Width - 5;
+                ((DetailView) ctrl).Height = (flowLayoutPanel1.Height - 10)/flowLayoutPanel1.Controls.Count;
             }
+        }
+
+        private void flowLayoutPanel1_ControlAddedRemoved(object sender, ControlEventArgs e)
+        {
+            foreach (var ctrl in flowLayoutPanel1.Controls)
+                ((DetailView)ctrl).Height = (flowLayoutPanel1.Height - 10) / flowLayoutPanel1.Controls.Count;
         }
 
         #endregion
@@ -197,10 +209,11 @@ namespace TicketAdvisor
             var results = _travelSearchManager.GetResults();
             if (grdResults.RowCount != results.Count)
             {
-                ResultSets.Clear();
-                ResultSets.AddRange(results);
-                grdResults.DataSource = null;
-                grdResults.DataSource = ResultSets;
+                _resultSets.Clear();
+                foreach (var resultSet in results)
+                {
+                    _resultSets.Add(resultSet);
+                }
                 grdResults.Refresh();
             }
             if (!_travelSearchManager.IsSearchInProgress)
@@ -213,6 +226,5 @@ namespace TicketAdvisor
                 ((Timer)sender).Dispose();
             }
         }
-
     }
 }

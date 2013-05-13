@@ -100,7 +100,7 @@
             // btnPin
             // 
             this.btnPin.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnPin.Location = new System.Drawing.Point(413, 0);
+            this.btnPin.Location = new System.Drawing.Point(411, 0);
             this.btnPin.Name = "btnPin";
             this.btnPin.Size = new System.Drawing.Size(20, 23);
             this.btnPin.TabIndex = 7;
@@ -111,16 +111,19 @@
             // grdTickets
             // 
             this.grdTickets.AllowUserToDeleteRows = false;
+            this.grdTickets.AllowUserToResizeRows = false;
+            this.grdTickets.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.grdTickets.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.grdTickets.BackgroundColor = System.Drawing.SystemColors.Control;
             this.grdTickets.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.grdTickets.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.grdTickets.Location = new System.Drawing.Point(0, 49);
             this.grdTickets.MultiSelect = false;
             this.grdTickets.Name = "grdTickets";
             this.grdTickets.ReadOnly = true;
             this.grdTickets.RowHeadersVisible = false;
-            this.grdTickets.Size = new System.Drawing.Size(434, 102);
+            this.grdTickets.Size = new System.Drawing.Size(432, 100);
             this.grdTickets.TabIndex = 8;
             // 
             // label4
@@ -161,6 +164,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.Controls.Add(this.label5);
             this.Controls.Add(this.lSumTravelTime);
             this.Controls.Add(this.lSumStops);
@@ -174,7 +178,7 @@
             this.Controls.Add(this.lEngineName);
             this.Controls.Add(this.label1);
             this.Name = "DetailView";
-            this.Size = new System.Drawing.Size(434, 151);
+            this.Size = new System.Drawing.Size(432, 149);
             ((System.ComponentModel.ISupportInitialize)(this.grdTickets)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
