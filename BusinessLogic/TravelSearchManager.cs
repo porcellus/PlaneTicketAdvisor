@@ -21,15 +21,11 @@ namespace BusinessLogic
                 }
             }
 
-            return retVal;
+            return retVal.Distinct().Take(50).ToList();
         }
 
 #region Fields
-        private const int MaxResultCount = 30;
-
         public List<Travel> Travels { get; private set; }
-
-        //private readonly Dictionary<Tuple<Search,DateTime>, List<Ticket>> _cache = new Dictionary<Tuple<Search, DateTime>, List<Ticket>>();
 
         private readonly ITravelSearchEngine[] _searchEngines;
 
@@ -116,14 +112,17 @@ namespace BusinessLogic
                 }
             }
             checks[first] = false;
-            //if (checks.All(a => a))
 
             return retVal;
         }
 
-        public void StartSearch(/*bool forceRefresh = false*/)
+        public void StartSearch()
         {
-            if (Travels.Count == 0) return;
+            if (Travels.Count == 0)
+            {
+                IsSearchInProgress = false;
+                return;
+            }
             IsSearchInProgress = true;
 
             _searchPlans = GetSearchPlans();
@@ -135,8 +134,6 @@ namespace BusinessLogic
                 engine.ClearSearches();
                 foreach (var search in reqSearches)
                 {
-                    //if (forceRefresh ||
-                        //!_cache.Any(a => Equals(a.Key.Item1, search) && a.Key.Item2 >= DateTime.Now.AddMinutes(10)))
                         engine.AddSearch(search);
                 }
                 engine.StartSearches();
@@ -165,21 +162,13 @@ namespace BusinessLogic
                         resultSets[search].AddRange(tmp[engine][search].OrderBy(a => a.Price));
                     }
                 }
-                /*
-                if (resultSets[search].Count != 0)
-                    _cache.Add(new Tuple<Search, DateTime>(search, DateTime.UtcNow), resultSets[search]);
-                else
-                {
-                    if (_cache.Any(a=> Equals(a.Key.Item1, search) && a.Key.Item2 >= DateTime.Now.AddHours(-1)))
-                        resultSets[search] = _cache.Last(a=>Equals(a.Key.Item1,search)).Value;
-                }*/
             }
 
             foreach (var plan in _searchPlans)
             {
                 var result = plan.Aggregate(new List<List<Ticket>> {new List<Ticket>()}, (current, search) => Combine(current, resultSets[search]));
 
-                retVal.AddRange(result.Select(a=> new ResultSet(a.ToArray())).ToList().OrderBy(a=> a.SumPrice).Take(MaxResultCount / plan.Count));
+                retVal.AddRange(result.Select(a=> new ResultSet(a.ToArray())).ToList().OrderBy(a=> a.SumPrice));
             }
 
             retVal = retVal.OrderBy(a => a.SumPrice).ToList();

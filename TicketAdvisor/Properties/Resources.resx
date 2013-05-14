@@ -287,4 +287,7 @@
   <data name="MainForm_MainForm_Load_Delete" xml:space="preserve">
     <value>Töröl</value>
   </data>
+  <data name="MainForm_resultCheck_Tick_Cancelled" xml:space="preserve">
+    <value>Leállítva</value>
+  </data>
 </root>

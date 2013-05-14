@@ -2,7 +2,7 @@
 using System.Globalization;
 using System.Windows.Forms;
 using BusinessLogic;
-using PlaneTicketAdvisorCS.Properties;
+using TicketAdvisor.Properties;
 
 namespace TicketAdvisor
 {

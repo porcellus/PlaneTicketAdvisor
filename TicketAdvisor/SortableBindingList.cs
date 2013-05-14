@@ -4,7 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Linq.Expressions;
 
-namespace PlaneTicketAdvisorCS
+namespace TicketAdvisor
 {
     public class SortableBindingList<T> : BindingList<T>
     {

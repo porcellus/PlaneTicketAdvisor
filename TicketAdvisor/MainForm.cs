@@ -5,8 +5,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Windows.Forms;
 using BusinessLogic;
-using PlaneTicketAdvisorCS;
-using PlaneTicketAdvisorCS.Properties;
+using TicketAdvisor.Properties;
 
 namespace TicketAdvisor
 {
@@ -116,7 +115,11 @@ namespace TicketAdvisor
                 if (_travelSearchManager.Travels.Count > 0)
                 {
                     statusLabel.Text = Resources.MainForm_btnSearch_Click_Searching;
-                    progressBar.Step = 1;
+                    progressBar.Value = 0;
+
+                    btnSearch.Text = Resources.MainForm_btnSearch_Click_Stop;
+                    grdTravels.Enabled = false;
+                    btnAdd.Enabled = btnRemove.Enabled = false;
 
                     _travelSearchManager.StartSearch();
 
@@ -124,9 +127,6 @@ namespace TicketAdvisor
                     resultCheck.Tick += resultCheck_Tick;
                     resultCheck.Start();
                 }
-                btnSearch.Text = Resources.MainForm_btnSearch_Click_Stop;
-                grdTravels.Enabled = false;
-                btnAdd.Enabled = btnRemove.Enabled = false;
             }
         }
 
@@ -205,7 +205,6 @@ namespace TicketAdvisor
         private void resultCheck_Tick(object sender, EventArgs e)
         {
             progressBar.Value = _travelSearchManager.GetProgress();
-            if (progressBar.Value == 100) statusLabel.Text = Resources.MainForm_resultCheck_Tick_Done;
             var results = _travelSearchManager.GetResults();
             if (grdResults.RowCount != results.Count)
             {
@@ -218,7 +217,7 @@ namespace TicketAdvisor
             }
             if (!_travelSearchManager.IsSearchInProgress)
             {
-                statusLabel.Text = Resources.MainForm_resultCheck_Tick_Done;
+                statusLabel.Text = progressBar.Value == 100 ? Resources.MainForm_resultCheck_Tick_Done : Resources.MainForm_resultCheck_Tick_Cancelled;
                 btnSearch.Text = Resources.MainForm_resultCheck_Tick_Search;
                 grdTravels.Enabled = true;
                 btnAdd.Enabled = btnRemove.Enabled = true;

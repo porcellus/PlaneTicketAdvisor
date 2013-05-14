@@ -10,7 +10,6 @@ namespace WebMiner
         public static void Update()
         {
             BrowserThread.ExecuteAction(WebCore.Update);
-            //WebCore.Update();
         }
         
         private WebView _view;
@@ -197,7 +196,6 @@ namespace WebMiner
             _view.ExecuteJavascript(functions)
             );
 
-            //if (_view.GetLastError() != Error.None) throw new Exception(_view.GetLastError().ToString());
         }
 
         public JSValue ExecuteJavascriptWithResult(string script)
